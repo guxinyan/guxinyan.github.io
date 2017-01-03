@@ -1,0 +1,775 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CSS,前端," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="CSS文本属性可定义文本的外观，可以改变文字的颜色、字符间距，对齐文本，对文本缩进等等。文中所总结的属性以及属性值大都为常用属性及其属性值，并不完全(包括语法规则)。
+
+字体font-size可设置字体的尺寸。语法规则为：font-size:&amp;lt;length&amp;gt; | &amp;lt;percentage&amp;gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS文本属性">
+<meta property="og:url" content="http://yoursite.com/2016/05/08/CSS文本属性/index.html">
+<meta property="og:site_name" content="Gu's Blog">
+<meta property="og:description" content="CSS文本属性可定义文本的外观，可以改变文字的颜色、字符间距，对齐文本，对文本缩进等等。文中所总结的属性以及属性值大都为常用属性及其属性值，并不完全(包括语法规则)。
+
+字体font-size可设置字体的尺寸。语法规则为：font-size:&amp;lt;length&amp;gt; | &amp;lt;percentage&amp;gt;">
+<meta property="og:image" content="http://yoursite.com/blogImg/baseline.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/sub.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/super.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/top.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/text_top.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/middle.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/bottom.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/text_bottom.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/white_space.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/normal.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/break_word.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/break_all.png">
+<meta property="og:updated_time" content="2016-05-08T09:56:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CSS文本属性">
+<meta name="twitter:description" content="CSS文本属性可定义文本的外观，可以改变文字的颜色、字符间距，对齐文本，对文本缩进等等。文中所总结的属性以及属性值大都为常用属性及其属性值，并不完全(包括语法规则)。
+
+字体font-size可设置字体的尺寸。语法规则为：font-size:&amp;lt;length&amp;gt; | &amp;lt;percentage&amp;gt;">
+<meta name="twitter:image" content="http://yoursite.com/blogImg/baseline.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/08/CSS文本属性/"/>
+
+
+
+
+
+  <title> CSS文本属性 | Gu's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Gu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/08/CSS文本属性/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="顾鑫燕">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Gu's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Gu's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                CSS文本属性
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-08T10:42:20+08:00">
+                2016-05-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/总结/" itemprop="url" rel="index">
+                    <span itemprop="name">总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>CSS文本属性可定义文本的外观，可以改变文字的颜色、字符间距，对齐文本，对文本缩进等等。<strong>文中所总结的属性以及属性值大都为常用属性及其属性值，并不完全(包括语法规则)</strong>。</p>
+<hr>
+<h1 id="字体"><a href="#字体" class="headerlink" title="字体"></a>字体</h1><h2 id="font-size"><a href="#font-size" class="headerlink" title="font-size"></a>font-size</h2><p>可设置字体的尺寸。语法规则为：<code>font-size:&lt;length&gt; | &lt;percentage&gt;</code><br><a id="more"></a><br>例如：<br><code>font-size:20px</code><br><code>font-size:2em</code>  参照物为父元素<br><code>font-size:200%</code> 参照物为父元素<br><code>font-size:2rem</code> 参照物为根元素&lt; html &gt;    </p>
+<h2 id="font-famliy"><a href="#font-famliy" class="headerlink" title="font-famliy"></a>font-famliy</h2><p>规定元素的字体系列。语法规则为：<code>font-famliy:[&lt;famliy-name&gt; | &lt;generic-family&gt;]#</code></p>
+<ul>
+<li><strong>famliy-name</strong>:<br>指定的系列名称：具体<em>字体</em>的名称，比如：”times”、”courier”、”arial”。</li>
+<li><strong>generic-family</strong><br>通常<em>字体系列</em>名称：比如：”serif”、”sans-serif”、”cursive”、”fantasy”、”monospace”。<br>在不同的浏览器上相同的generic-family的表现是不一样的,取决于用户安装了的字体。</li>
+</ul>
+<h2 id="font-weight"><a href="#font-weight" class="headerlink" title="font-weight"></a>font-weight</h2><p>设置文本的粗细。语法规则为:<code>font-weight:normal|bold|bolder|lighter|100|200|300|400|500|600|700|800|900</code></p>
+<h2 id="font-style"><a href="#font-style" class="headerlink" title="font-style"></a>font-style</h2><p>定义字体的风格。语法规则为：<code>font-style:normal|italic|oblique</code></p>
+<ul>
+<li><strong>italic</strong>:斜体</li>
+<li><strong>oblique</strong>:倾斜。对于没有斜体的字体应该使用oblique属性值来实现倾斜的文字效果。</li>
+</ul>
+<h2 id="line-height"><a href="#line-height" class="headerlink" title="line-height"></a>line-height</h2><p>设置行间的距离（行高）。语法规则为:<code>line-height:normal|&lt;number&gt;|&lt;length&gt;|&lt;percentage&gt;</code><br>例如：<br><code>line-height:40px</code><br><code>line-height:3em</code><br><code>line-height:300%</code><br><code>line-height:3</code><br><strong>父元素的行高为300%或3em时，会根据父元素的字体大小先计算出行高值然后再让子元素继承，而3是根据子元素的字体大小动态计算出行高值让子元素继承。</strong></p>
+<h2 id="font"><a href="#font" class="headerlink" title="font"></a>font</h2><p>语法规则为：<code>font:[ [&lt;font-style&gt;||&lt;font-weight&gt;]? &lt;font-size&gt; [/&lt;line-height&gt;]? &lt;font-family&gt; ]</code><br>缩写时font-size和font-family为必填属性值。<br>例如：<br><code>font:30px/2 &#39;Consolas&#39;,monospace</code><br><code>font:italic bold 20px/1.5 arial,serif</code></p>
+<h2 id="color"><a href="#color" class="headerlink" title="color"></a>color</h2><p>例如：<br><code>color:red</code><br><code>color:#ff0000</code><br><code>color:rgb(255,0,0)</code><br><code>color:rgba(255,0,0,1)</code><br><code>color:transparnt</code></p>
+<hr>
+<h1 id="对齐方式"><a href="#对齐方式" class="headerlink" title="对齐方式"></a>对齐方式</h1><h2 id="text-align"><a href="#text-align" class="headerlink" title="text-align"></a>text-align</h2><p>规定元素中的文本的水平对齐方式。语法规则为：<code>text-align:left|right|center|justify</code></p>
+<ul>
+<li><strong>justify</strong>:两端对齐</li>
+</ul>
+<h2 id="vertical-align"><a href="#vertical-align" class="headerlink" title="vertical-align"></a>vertical-align</h2><p>设置元素的垂直对齐方式。语法规则为:<code>vertical-align:baseline|sub|super|top|text-top|middle|bottom|text-bottom|&lt;percentage&gt;|&lt;length&gt;</code></p>
+<ul>
+<li><code>&lt;percentage&gt;</code>的参照物为<code>line-height</code></li>
+</ul>
+<p>只有一个元素属于inline或是inline-block（table-cell也可以理解为inline-block水平）水平，其身上的vertical-align属性才会起作用。<br>接下来我们将以示例来进行具体说明：<br>html代码：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"demo"</span>&gt;</span></div><div class="line">    	这是测试<span class="tag">&lt;<span class="name">span</span>&gt;</span>asdasdas<span class="tag">&lt;/<span class="name">span</span>&gt;</span>测试测试测试测试</div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<ul>
+<li>vertical-align:baseline<br><img src="/blogImg/baseline.png" alt="baseline示例图"></li>
+<li>vertical-align: sub<br><img src="/blogImg/sub.png" alt="sub示例图"></li>
+<li>vertical-align:super<br><img src="/blogImg/super.png" alt="super示例图"></li>
+<li>vertical-align:top<br><img src="/blogImg/top.png" alt="top示例图"></li>
+<li>vertical-align:text-top<br><img src="/blogImg/text_top.png" alt="text-top示例图"></li>
+<li>vertical-align:middle<br><img src="/blogImg/middle.png" alt="middle示例图"></li>
+<li>vertical-align:bottom<br><img src="/blogImg/bottom.png" alt="bottom示例图"></li>
+<li>vertical-align:text-bottom<br><img src="/blogImg/text_bottom.png" alt="text-bottom示例图"></li>
+</ul>
+<hr>
+<h1 id="格式处理"><a href="#格式处理" class="headerlink" title="格式处理"></a>格式处理</h1><h2 id="text-indent"><a href="#text-indent" class="headerlink" title="text-indent"></a>text-indent</h2><p>规t定文本块中首行文本的缩进。语法规则为：<code>text-indent:&lt;length&gt;|&lt;percentage&gt;</code><br>例如：<br><code>text-indent:2em</code>参照物为字体大小<br><code>text-indent:10px</code><br><code>text-indent:20%</code>参照物为容器大小</p>
+<ul>
+<li>常用<code>text-indent:-9999px</code>达到隐藏文字的目的。用于SEO</li>
+</ul>
+<h2 id="white-space"><a href="#white-space" class="headerlink" title="white-space"></a>white-space</h2><p>设置如何处理元素内的空白。语法规则为：<code>white-space:normal|nowrap|pre|pre-wrap|pre-line</code><br><img src="/blogImg/white_space.png" alt="white-space行为"></p>
+<h2 id="word-wrap"><a href="#word-wrap" class="headerlink" title="word-wrap"></a>word-wrap</h2><p>允许长单词或 URL 地址换行到下一行。语法规则为：<code>word-wrap:normal|break-word</code><br>这里我们将以示例说明。<br>HTML代码<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"demo"</span>&gt;</span></div><div class="line">    	test sagfzxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<ul>
+<li>正常情况下<br><img src="/blogImg/normal.png" alt="正常情况示例图">浏览器判断第二个单词容器放不下时会自动换行。</li>
+<li>设置了word-wrap:break-word<br><img src="/blogImg/break_word.png" alt="break-word示例图">在正常情况的基础上切断单词。</li>
+</ul>
+<h2 id="word-break"><a href="#word-break" class="headerlink" title="word-break"></a>word-break</h2><p>规定自动换行的处理方法。语法规则为：<code>word-break:normal|keep-all|break-all</code><br>紧接上例。</p>
+<ul>
+<li>设置了word-break:break-all<br><img src="/blogImg/break_all.png" alt="break-all示例图">不同的是，长单词会自动跟进test后，不换行。</li>
+</ul>
+<p>注意体会word-wrap:break-word与word-break:break-all区别。后者更节约空间。</p>
+<h2 id="text-transform"><a href="#text-transform" class="headerlink" title="text-transform"></a>text-transform</h2><p>控制文本的大小写。语法规则为：<code>text-transform:none|capitalize|uppercase|lowercase</code></p>
+<ul>
+<li><strong>capitalize</strong>：文本中的每个单词以大写字母开头</li>
+</ul>
+<hr>
+<h1 id="文本修饰"><a href="#文本修饰" class="headerlink" title="文本修饰"></a>文本修饰</h1><h2 id="text-shadow"><a href="#text-shadow" class="headerlink" title="text-shadow"></a>text-shadow</h2><p>向文本设置阴影。语法规则为:<code>text-shadow:none | [ &lt;length&gt;{2,3} &amp;&amp; &lt;color&gt;? ]#</code><br>例如：<br><code>text-shadow:1px 2px 3px #f00</code> 1px代表x轴阴影的位置，2px代表y轴阴影的位置，3px代表模糊的距离。颜色不写默认为文字颜色。</p>
+<h2 id="text-decoration"><a href="#text-decoration" class="headerlink" title="text-decoration"></a>text-decoration</h2><p>语法规则为：<code>text-decoration:none | [underline||overline||line-through]</code><br>例如：<br><code>text-decoration:underline overline</code></p>
+<hr>
+<h1 id="高级设置"><a href="#高级设置" class="headerlink" title="高级设置"></a>高级设置</h1><h2 id="text-overflow"><a href="#text-overflow" class="headerlink" title="text-overflow"></a>text-overflow</h2><p>语法规则为：<code>text-overflow:clip|ellipsis</code><br><strong>常用</strong>：单行文字过长末尾出现……<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">text-overflow</span><span class="selector-pseudo">:ellipsis</span>;</div><div class="line"><span class="selector-tag">overflow</span><span class="selector-pseudo">:hidden</span>;</div><div class="line"><span class="selector-tag">white-space</span><span class="selector-pseudo">:nowrap</span>;</div></pre></td></tr></table></figure></p>
+<h2 id="cursor"><a href="#cursor" class="headerlink" title="cursor"></a>cursor</h2><p>规定要显示的光标的类型（形状）。语法规则为：<code>cursor:[&lt;uri&gt;,]* [auto|default|none|help|pointer|zoom-in|zoom-out|move]</code></p>
+<ul>
+<li><code>&lt;uri&gt;</code>：自定义光标类型</li>
+<li>help:问号</li>
+<li>zoom-in:放大镜</li>
+<li>zoom-out:缩小镜</li>
+</ul>
+<p>例如：<br><code>cursor:url(xx.cur),pointer</code>在图片无法加载的情况下采用鼠标形状。</p>
+<h2 id="inherit"><a href="#inherit" class="headerlink" title="inherit"></a>inherit</h2><p>强制继承。<br>CSS中的每个属性都有一个特定值”inherit”,其含义是指定继承父元素的相应属性，使用inherit一方面在代码上能地表明要继承于父元素的样式属性，另一方面也使子元素继承了那些不会被自动继承的属性。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CSS/" rel="tag"># CSS</a>
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/27/CSS选择器/" rel="next" title="CSS选择器">
+                <i class="fa fa-chevron-left"></i> CSS选择器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/09/CSS盒模型/" rel="prev" title="CSS盒模型">
+                CSS盒模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400"
+               alt="顾鑫燕" />
+          <p class="site-author-name" itemprop="name">顾鑫燕</p>
+          <p class="site-description motion-element" itemprop="description">吃吃吃&&睡睡睡</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/guxinyan" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:850836576@qq.com" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-link"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://zhanjingbo.site/" title="Zhan's Blog" target="_blank">Zhan's Blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#字体"><span class="nav-number">1.</span> <span class="nav-text">字体</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#font-size"><span class="nav-number">1.1.</span> <span class="nav-text">font-size</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#font-famliy"><span class="nav-number">1.2.</span> <span class="nav-text">font-famliy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#font-weight"><span class="nav-number">1.3.</span> <span class="nav-text">font-weight</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#font-style"><span class="nav-number">1.4.</span> <span class="nav-text">font-style</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#line-height"><span class="nav-number">1.5.</span> <span class="nav-text">line-height</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#font"><span class="nav-number">1.6.</span> <span class="nav-text">font</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#color"><span class="nav-number">1.7.</span> <span class="nav-text">color</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#对齐方式"><span class="nav-number">2.</span> <span class="nav-text">对齐方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#text-align"><span class="nav-number">2.1.</span> <span class="nav-text">text-align</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vertical-align"><span class="nav-number">2.2.</span> <span class="nav-text">vertical-align</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#格式处理"><span class="nav-number">3.</span> <span class="nav-text">格式处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#text-indent"><span class="nav-number">3.1.</span> <span class="nav-text">text-indent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#white-space"><span class="nav-number">3.2.</span> <span class="nav-text">white-space</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#word-wrap"><span class="nav-number">3.3.</span> <span class="nav-text">word-wrap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#word-break"><span class="nav-number">3.4.</span> <span class="nav-text">word-break</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#text-transform"><span class="nav-number">3.5.</span> <span class="nav-text">text-transform</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文本修饰"><span class="nav-number">4.</span> <span class="nav-text">文本修饰</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#text-shadow"><span class="nav-number">4.1.</span> <span class="nav-text">text-shadow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#text-decoration"><span class="nav-number">4.2.</span> <span class="nav-text">text-decoration</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高级设置"><span class="nav-number">5.</span> <span class="nav-text">高级设置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#text-overflow"><span class="nav-number">5.1.</span> <span class="nav-text">text-overflow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cursor"><span class="nav-number">5.2.</span> <span class="nav-text">cursor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inherit"><span class="nav-number">5.3.</span> <span class="nav-text">inherit</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">顾鑫燕</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
