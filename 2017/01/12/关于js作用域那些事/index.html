@@ -1,0 +1,760 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端,javaScript," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="什么是作用域解释型语言与编译型语言
+编译型语言在程序执行之前，有一个单独的编译过程，将程序翻译成机器语言的文件，运行时不需要重新翻译。如c、c++。
+解释型语言是在运行的时候将程序翻译成机器语言，相对速度要比编译型语言慢。如典型的basic
+而javaScript是一种脚本语言，脚本语言是一种解释型语言。
+
+其实，之前本人对编译型语言和解释型语言的界限简单定位是否有中间文件，但是注意！！java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于js作用域那些事">
+<meta property="og:url" content="http://yoursite.com/2017/01/12/关于js作用域那些事/index.html">
+<meta property="og:site_name" content="Gu's Blog">
+<meta property="og:description" content="什么是作用域解释型语言与编译型语言
+编译型语言在程序执行之前，有一个单独的编译过程，将程序翻译成机器语言的文件，运行时不需要重新翻译。如c、c++。
+解释型语言是在运行的时候将程序翻译成机器语言，相对速度要比编译型语言慢。如典型的basic
+而javaScript是一种脚本语言，脚本语言是一种解释型语言。
+
+其实，之前本人对编译型语言和解释型语言的界限简单定位是否有中间文件，但是注意！！java">
+<meta property="og:image" content="http://yoursite.com/blogImg/作用域.jpeg">
+<meta property="og:image" content="http://yoursite.com/blogImg/静态作用域.jpeg">
+<meta property="og:image" content="http://yoursite.com/blogImg/词法环境.jpeg">
+<meta property="og:image" content="http://yoursite.com/blogImg/词法环境例子.jpeg">
+<meta property="og:image" content="http://yoursite.com/blogImg/变量提升1.jpeg">
+<meta property="og:updated_time" content="2017-01-12T12:41:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于js作用域那些事">
+<meta name="twitter:description" content="什么是作用域解释型语言与编译型语言
+编译型语言在程序执行之前，有一个单独的编译过程，将程序翻译成机器语言的文件，运行时不需要重新翻译。如c、c++。
+解释型语言是在运行的时候将程序翻译成机器语言，相对速度要比编译型语言慢。如典型的basic
+而javaScript是一种脚本语言，脚本语言是一种解释型语言。
+
+其实，之前本人对编译型语言和解释型语言的界限简单定位是否有中间文件，但是注意！！java">
+<meta name="twitter:image" content="http://yoursite.com/blogImg/作用域.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/12/关于js作用域那些事/"/>
+
+
+
+
+
+  <title> 关于js作用域那些事 | Gu's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Gu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/12/关于js作用域那些事/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="顾鑫燕">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Gu's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Gu's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                关于js作用域那些事
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-12T14:39:29+08:00">
+                2017-01-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<h1 id="什么是作用域"><a href="#什么是作用域" class="headerlink" title="什么是作用域"></a>什么是作用域</h1><h2 id="解释型语言与编译型语言"><a href="#解释型语言与编译型语言" class="headerlink" title="解释型语言与编译型语言"></a>解释型语言与编译型语言</h2><ul>
+<li>编译型语言在程序执行之前，有一个单独的编译过程，将程序翻译成机器语言的文件，运行时不需要重新翻译。如c、c++。</li>
+<li>解释型语言是在运行的时候将程序翻译成机器语言，相对速度要比编译型语言慢。如典型的basic</li>
+<li>而javaScript是一种脚本语言，脚本语言是一种解释型语言。</li>
+</ul>
+<p>其实，之前本人对编译型语言和解释型语言的界限简单定位是否有中间文件，但是注意！！java是解释型语言，但是java程序首先通过编译器编译成class文件，再用虚拟机进行解释执行的。所以，这样的界限定位并不准确。</p>
+<blockquote>
+<p>尽管通常将JavaScript归类为“动态”或“解释执行”语言，但事实上它是一门编译语言。这个事实对你来说可能显而易见，也可能你闻所未闻，取决于你接触过多少编程语言，具有多少经验。但与传统的编译语言不同，它不是提前编译的，编译结果也不能在分布式系统中进行移植。<br>尽管如此，JavaScript引擎进行编译的步骤和传统的编译语言非常相似，在某些环节可能比预想的要复杂。</p>
+</blockquote>
+<p>以上引自《你不知道javaScript》，第一次看到这样的说法，稍作记录，有待考证。<br><a id="more"></a></p>
+<h2 id="作用域、引擎、编译器三兄弟"><a href="#作用域、引擎、编译器三兄弟" class="headerlink" title="作用域、引擎、编译器三兄弟"></a>作用域、引擎、编译器三兄弟</h2><ul>
+<li>引擎：从头到尾负责整个JavaScript程序的编译和执行过程，<a href="http://web.jobbole.com/84351/" target="_blank" rel="external">了解更多</a></li>
+<li>编译器：引擎的好朋友之一，负责语法分析以及代码生成等</li>
+<li>作用域：引擎的另一位好朋友，负责收集并维护由所有声明的标识符（变量）组成的一系列查询，并实施一套非常严格的规范，确定当前执行的代码对这些标识符的访问权限。</li>
+</ul>
+<blockquote>
+<p>以var a = 2为例，会分成两步完成<br>1、遇到var a,编译器会询问作用域是否已经有一个该名称的变量存在同一作用域，如果是，编译器会忽略该声明；否则它会要求作用域在当前作用域声明一个新的变量，并命名为a.<br>2、代码运行时，引擎会首先询问作用域，在当前作用域中是否存在一个叫做a的变量，如果是，引擎就会引用这个变量；如果否，引擎会继续查找该变量。找到a变量，就会将2赋值给它，否则引擎就会抛出一个异常。</p>
+</blockquote>
+<p><img src="/blogImg/作用域.jpeg" alt="作用域"></p>
+<h2 id="LHS-amp-amp-RHS"><a href="#LHS-amp-amp-RHS" class="headerlink" title="LHS &amp;&amp; RHS"></a>LHS &amp;&amp; RHS</h2><p>简单来说，RHS查询就是简单地查找某个变量的值，而LHS查询则是试图找到变量的容器并对它赋值。<br>RHS查询和LHS查询都会从当前作用域中开始进行查找，如果没有，则会继续向外层作用域继续查找，一直到达最外层作用域（全局作用域）。</p>
+<blockquote>
+<p>如果RHS查询在所有嵌套的作用域中遍寻不到所需的变量，引擎就会抛出ReferenceError异常。<br>如果RHS查询找到了一个变量，但是你尝试对这个变量的值进行不合理的操作，比如试图对一个非函数类型的值进行函数调用，或者引用null或undefined类型的值中的属性，那么引擎会抛出另外一种类型的异常，叫作TypeError。</p>
+<p>相较之下，当引擎执行LHS查询时，如果在顶层（全局作用域）中也无法找到目标变量，全局作用域中就会创建一个具有该名称的变量，并将其返还给引擎，前提是程序运行在非“严格模式”下。</p>
+<p>ES5中引入了“严格模式”。同正常模式，或者说宽松/懒惰模式相比，严格模式在行为上有很多不同。其中一个不同的行为是严格模式禁止自动或隐式地创建全局变量。因此，在严格模式中LHS查询失败时，并不会创建并返回一个全局变量，引擎会抛出同RHS查询失败时类似的ReferenceError异常。</p>
+</blockquote>
+<hr>
+<h1 id="词法作用域vs动态作用域"><a href="#词法作用域vs动态作用域" class="headerlink" title="词法作用域vs动态作用域"></a>词法作用域vs动态作用域</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><ul>
+<li>静态作用域：又称词法作用域，由程序定义的位置决定，一般采用嵌套作用域的方式解析。</li>
+<li>动态作用域：由程序执行顺序决定</li>
+</ul>
+<p>以一个简单地例子来说明:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> x = <span class="number">10</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(x);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> x = <span class="number">20</span>;</div><div class="line">    foo();</div><div class="line">&#125;</div><div class="line">bar();</div></pre></td></tr></table></figure></p>
+<ul>
+<li><p>静态作用域分析<br><img src="/blogImg/静态作用域.jpeg" alt="静态作用域"><br>对静态作用域而言，作用域由程序定义的位置决定，在foo函数中没有x,词法作用域让foo()中的x通过RHS引用到了全局作用域中的x,因此会输出10。</p>
+</li>
+<li><p>动态作用域并不关心函数和作用域是如何声明以及在何处声明的，只关心它们从何处调用，基于调用栈的。因此，在动态作用域中，最终会输出20。因为foo()无法找到x的变量引用时，会顺着调用栈在调用foo()的地方查找x,即bar函数中x(20)。</p>
+</li>
+</ul>
+<h2 id="词法环境管理"><a href="#词法环境管理" class="headerlink" title="词法环境管理"></a>词法环境管理</h2><p>当javaScript引擎开始执行（进入）一段可执行代码之后，会生成一个执行环境（Execution Context),或执行上下文。javascript引擎通过一个环境栈（ Stack ）来维护执行环境，当进入一个执行环境，则将当前运行的执行环境压入到这个栈的顶部。而函数执行之后，栈将环境弹出，把控制权返回给之前的执行环境。<br><img src="/blogImg/词法环境.jpeg" alt="词法环境"><br>执行环境由词法环境(Lexical Environments)、变量环境(Variable Environment)、this关键字(This Binding)绑定三部分组成。</p>
+<ul>
+<li>注意：词法环境的复数形式，我们可以简单理解为一个执行环境之中，有由一组相互关联的词法环境组成的”词法环境数组“。</li>
+<li>变量环境可以简单理解为，与词法环境（Lexical Environments）刚开始是一样的，只是词法环境在执行过程中可能会变化，但是变量环境不会。</li>
+</ul>
+<p>接下来，我们还是以例子来说明词法环境管理。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> x = <span class="number">10</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">y</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> z = <span class="number">30</span>;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params">q</span>)</span>&#123;</div><div class="line">        <span class="keyword">return</span> x+y+z+q;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> bar;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> bar = foo(<span class="number">20</span>);</div><div class="line">bar(<span class="number">40</span>);</div></pre></td></tr></table></figure></p>
+<p>随着代码的执行，词法环境一直在变化。<br>下图是整个词法环境的最终结果示意图：<br><img src="/blogImg/词法环境例子.jpeg" alt="词法环境例子"></p>
+<h2 id="词法环境初始化（声明提升）"><a href="#词法环境初始化（声明提升）" class="headerlink" title="词法环境初始化（声明提升）"></a>词法环境初始化（声明提升）</h2><p>词法环境都有一次初始化，也就是我们常说的声明提升。在代码执行之前，引擎都会对javaScript代码进行编译。</p>
+<blockquote>
+<p>包括变量和函数在内的所有声明都会在任何代码被执行前首先被处理。var a = 2，会被分为两步：var a;a = 2。var a 会在编译阶段进行的，a = 2会留在原地等待执行阶段。</p>
+</blockquote>
+<p>注意：函数声明和变量声明都会被提升。但是函数会首先提升，然后才是变量。</p>
+<p>下图是上面例子代码未执行时的全局词法环境初始化<br><img src="/blogImg/变量提升1.jpeg" alt="变量提升1"></p>
+<h2 id="“欺骗”词法"><a href="#“欺骗”词法" class="headerlink" title="“欺骗”词法"></a>“欺骗”词法</h2><p>在javaScript中，有两种方式可以在运行时来”修改“词法作用域。</p>
+<ul>
+<li>eval</li>
+<li>with</li>
+</ul>
+<hr>
+<h1 id="函数作用域、块作用域"><a href="#函数作用域、块作用域" class="headerlink" title="函数作用域、块作用域"></a>函数作用域、块作用域</h1><hr>
+<h1 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h1><h2 id="什么叫闭包"><a href="#什么叫闭包" class="headerlink" title="什么叫闭包"></a>什么叫闭包</h2><h2 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h2>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+            <a href="/tags/javaScript/" rel="tag"># javaScript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/03/关于js异步的一些概念理解/" rel="next" title="关于js异步的一些概念理解">
+                <i class="fa fa-chevron-left"></i> 关于js异步的一些概念理解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400"
+               alt="顾鑫燕" />
+          <p class="site-author-name" itemprop="name">顾鑫燕</p>
+          <p class="site-description motion-element" itemprop="description">吃吃吃&&睡睡睡</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/guxinyan" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:850836576@qq.com" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-link"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://zhanjingbo.site/" title="Zhan's Blog" target="_blank">Zhan's Blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是作用域"><span class="nav-number">1.</span> <span class="nav-text">什么是作用域</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#解释型语言与编译型语言"><span class="nav-number">1.1.</span> <span class="nav-text">解释型语言与编译型语言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域、引擎、编译器三兄弟"><span class="nav-number">1.2.</span> <span class="nav-text">作用域、引擎、编译器三兄弟</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LHS-amp-amp-RHS"><span class="nav-number">1.3.</span> <span class="nav-text">LHS && RHS</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#词法作用域vs动态作用域"><span class="nav-number">2.</span> <span class="nav-text">词法作用域vs动态作用域</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">2.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#词法环境管理"><span class="nav-number">2.2.</span> <span class="nav-text">词法环境管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#词法环境初始化（声明提升）"><span class="nav-number">2.3.</span> <span class="nav-text">词法环境初始化（声明提升）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#“欺骗”词法"><span class="nav-number">2.4.</span> <span class="nav-text">“欺骗”词法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#函数作用域、块作用域"><span class="nav-number">3.</span> <span class="nav-text">函数作用域、块作用域</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#闭包"><span class="nav-number">4.</span> <span class="nav-text">闭包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么叫闭包"><span class="nav-number">4.1.</span> <span class="nav-text">什么叫闭包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块"><span class="nav-number">4.2.</span> <span class="nav-text">模块</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">顾鑫燕</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
