@@ -1,0 +1,731 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端,React," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="年后开始真正开始接手公司的wap项目了，从之前的管理后台常驻人员将眼界开向了用户端。用了半年多的Angular，再重新拾起react做需求的时候，就遇到了声明周期这个绊脚石，决心整理一波~
+
+React通过React.createClass(object)方法来创建组件，每个组件都是一个状态机。React为每个组件提供了生命周期钩子函数去响应不同的时刻——创建时、存在期以及销毁期。那么接下来，我们">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React Component  Lifecycle">
+<meta property="og:url" content="http://yoursite.com/2017/02/23/React-Component-Lifecycle/index.html">
+<meta property="og:site_name" content="Gu's Blog">
+<meta property="og:description" content="年后开始真正开始接手公司的wap项目了，从之前的管理后台常驻人员将眼界开向了用户端。用了半年多的Angular，再重新拾起react做需求的时候，就遇到了声明周期这个绊脚石，决心整理一波~
+
+React通过React.createClass(object)方法来创建组件，每个组件都是一个状态机。React为每个组件提供了生命周期钩子函数去响应不同的时刻——创建时、存在期以及销毁期。那么接下来，我们">
+<meta property="og:image" content="http://yoursite.com/blogImg/initialization_lifecycle.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/state_changes_lifecycle.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/props_change_lifecycle.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/unmount.png">
+<meta property="og:updated_time" content="2017-02-25T12:05:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="React Component  Lifecycle">
+<meta name="twitter:description" content="年后开始真正开始接手公司的wap项目了，从之前的管理后台常驻人员将眼界开向了用户端。用了半年多的Angular，再重新拾起react做需求的时候，就遇到了声明周期这个绊脚石，决心整理一波~
+
+React通过React.createClass(object)方法来创建组件，每个组件都是一个状态机。React为每个组件提供了生命周期钩子函数去响应不同的时刻——创建时、存在期以及销毁期。那么接下来，我们">
+<meta name="twitter:image" content="http://yoursite.com/blogImg/initialization_lifecycle.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/02/23/React-Component-Lifecycle/"/>
+
+
+
+
+
+  <title> React Component  Lifecycle | Gu's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Gu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/23/React-Component-Lifecycle/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="顾鑫燕">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Gu's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Gu's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                React Component  Lifecycle
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-23T16:12:58+08:00">
+                2017-02-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/总结/" itemprop="url" rel="index">
+                    <span itemprop="name">总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>年后开始真正开始接手公司的wap项目了，从之前的管理后台常驻人员将眼界开向了用户端。用了半年多的Angular，再重新拾起react做需求的时候，就遇到了声明周期这个绊脚石，决心整理一波~</p>
+<blockquote>
+<p>React通过React.createClass(object)方法来创建组件，每个组件都是一个状态机。React为每个组件提供了生命周期钩子函数去响应不同的时刻——创建时、存在期以及销毁期。<br>那么接下来，我们从以下几个一一探索钩子函数的奥妙。 </p>
+</blockquote>
+<hr>
+<h1 id="一、初始化"><a href="#一、初始化" class="headerlink" title="一、初始化"></a>一、初始化</h1><p>首先，每个组件渲染都有一次初始化（也称组件挂载），在这个阶段，会<code>依次</code>执行下图中的函数。这些函数（除render外），<code>在组件的声明周期内，只会(only)执行一次</code>。<br><img src="/blogImg/initialization_lifecycle.png" alt="初始化" style="width:60%"><br><a id="more"></a><br>下面是一个很简单的组件：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> A = React.createClass(&#123;</div><div class="line">    <span class="attr">getDefaultProps</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">return</span> &#123;&#125;;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">return</span> &#123;&#125;;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">componentWillMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'component will mount'</span>);</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">componentDidMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'component did mount'</span>);</div><div class="line">    &#125;,</div><div class="line">    <span class="comment">/**</span></div><div class="line">    * 在render函数中，假设不想返回任何dom结构，可以返回 null 或者 false</div><div class="line">    *               返回dom结构的时候，只能返回一个顶级元素（single child component）</div><div class="line">    */</div><div class="line">    render: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'render'</span>);</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">ReactDOM.render(</div><div class="line">  <span class="xml"><span class="tag">&lt;<span class="name">A</span>/&gt;</span></span>,</div><div class="line">  <span class="built_in">document</span>.getElementById(<span class="string">'id0'</span>)</div><div class="line">)</div><div class="line"></div><div class="line">这时候控制台的输出为：</div><div class="line"><span class="string">"component will mount"</span></div><div class="line"><span class="string">"render"</span></div><div class="line"><span class="string">"component did mount"</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="componentWillMount"><a href="#componentWillMount" class="headerlink" title="componentWillMount"></a>componentWillMount</h2><p>componentWillMount是render前最后一次修改state的机会,但在此函数对state的修改不会触发re-rendering<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> A = React.createClass(&#123;</div><div class="line">    <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">return</span> &#123;<span class="attr">num</span>:<span class="number">1</span>&#125;;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">componentWillMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">this</span>.setState(&#123;</div><div class="line">            <span class="attr">num</span>:<span class="number">2</span></div><div class="line">        &#125;);</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'component will mount:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">componentDidMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'component did mount:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">render</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'render:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;  </div><div class="line">&#125;)</div><div class="line"></div><div class="line">控制台输出：</div><div class="line"><span class="string">"component will mount:1"</span></div><div class="line"><span class="string">"render:2"</span></div><div class="line"><span class="string">"component did mount:2"</span></div></pre></td></tr></table></figure></p>
+<p>但是很奇怪的，在componentWillMount函数中输出的num值为1，而并不是我们所以为的2。其实，</p>
+<blockquote>
+<p>setState并不是同步的， 我们可以理解为异步。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">setState(nextState, callback)</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>callback会在新的state设置成功之后执行。因此，如果我们想在state更新之后再获取,可以在callback中获取。我们将上面代码改成：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> A = React.createClass(&#123;</div><div class="line">    <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">return</span> &#123;<span class="attr">num</span>:<span class="number">1</span>&#125;;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">componentWillMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">this</span>.setState(&#123;</div><div class="line">            <span class="attr">num</span>:<span class="number">2</span></div><div class="line">        &#125;,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"callback:"</span>+<span class="keyword">this</span>.state.num);</div><div class="line">        &#125;);</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'component will mount:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">componentDidMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'component did mount:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">render</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'render:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;  </div><div class="line">&#125;)</div><div class="line"></div><div class="line">控制台输出：</div><div class="line"><span class="string">"component will mount:1"</span></div><div class="line"><span class="string">"render:2"</span></div><div class="line"><span class="string">"component did mount:2"</span></div><div class="line"><span class="string">"callback:2"</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="componentDidMount"><a href="#componentDidMount" class="headerlink" title="componentDidMount"></a>componentDidMount</h2><p>componentDidMount中修改state会触发re-rendering。在这个函数中，我们也可以进行DOM操作。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> A = React.createClass(&#123;</div><div class="line">    <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">return</span> &#123;<span class="attr">num</span>:<span class="number">1</span>&#125;;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">componentWillMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'component will mount:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">componentDidMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">this</span>.setState(&#123;</div><div class="line">            <span class="attr">num</span>:<span class="number">3</span></div><div class="line">        &#125;)</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'component did mount:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">render</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'render:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;  </div><div class="line">&#125;)</div><div class="line"></div><div class="line">控制台输出：</div><div class="line"><span class="string">"component will mount:1"</span></div><div class="line"><span class="string">"render:1"</span></div><div class="line"><span class="string">"component did mount:1"</span></div><div class="line"><span class="string">"render:3"</span></div></pre></td></tr></table></figure></p>
+<p>然后我做了个小小的实验，将代码进行了小小的修改，将state的num在render函数中渲染出来：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> A = React.createClass(&#123;</div><div class="line">    <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">return</span> &#123;<span class="attr">num</span>:<span class="number">1</span>&#125;;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">componentWillMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'component will mount:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">componentDidMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">this</span>.setState(&#123;</div><div class="line">            <span class="attr">num</span>:<span class="number">3</span></div><div class="line">        &#125;)</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'component did mount:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">render</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'render:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.state.num&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</div><div class="line">    &#125;  </div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p>肉眼无法发现dom结构从1-3的变化，直接我们看到的就是3。</p>
+<hr>
+<h1 id="二、state改变"><a href="#二、state改变" class="headerlink" title="二、state改变"></a>二、state改变</h1><p>更新方法只会在组件初始化渲染完成后且触发了重新渲染的条件才会执行，按照以下顺序执行图中函数。<br><img src="/blogImg/state_changes_lifecycle.png" alt="state_changes" style="width:60%"></p>
+<p>按照上面代码，我们在componentDidMount函数中对state进行了修改：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> A = React.createClass(&#123;</div><div class="line">  <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> &#123;<span class="attr">num</span>:<span class="number">1</span>&#125;;</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentDidMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">     <span class="keyword">this</span>.setState(&#123;</div><div class="line">      <span class="attr">num</span>:<span class="number">3</span></div><div class="line">    &#125;)</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">shouldComponentUpdate</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"shouldComponentUpdate:"</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentWillUpdate</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"componentWillUpdate:"</span>+<span class="keyword">this</span>.state.num);</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentDidUpdate</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"componentDidUpdate:"</span>+<span class="keyword">this</span>.state.num);</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">render</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">     <span class="built_in">console</span>.log(<span class="string">'render:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.state.num&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</div><div class="line">  &#125;  </div><div class="line">&#125;)</div><div class="line"></div><div class="line">控制台输出：</div><div class="line"><span class="string">"render:1"</span></div><div class="line"><span class="string">"shouldComponentUpdate:1"</span></div><div class="line"><span class="string">"componentWillUpdate:1"</span></div><div class="line"><span class="string">"render:3"</span></div><div class="line"><span class="string">"componentDidUpdate:3"</span></div></pre></td></tr></table></figure></p>
+<p>个人觉得很神奇的是，在shouldComponentUpdate和componentWillUpdate取到的num值都是1。于是，我很幼稚地刷了很多次，在shouldComponentUpdate和componentWillUpdate中永远取到的this.state.num一直都是1，而在render中总能正确获取2。大胆假设一下，react让setState这个函数的行为结果一定完成在componentWillUpdate后，render函数前。根据前面的理解，将setState理解为一个异步行为，我觉得有点偏差，setState这个行为是一个可以预测时间（可以决定在什么时候执行完成）的函数。因此，大胆假设一下，</p>
+<blockquote>
+<p>将setState函数理解成是一个“人工异步”。</p>
+</blockquote>
+<hr>
+<h2 id="shouldComponentUpdate"><a href="#shouldComponentUpdate" class="headerlink" title="shouldComponentUpdate"></a>shouldComponentUpdate</h2><p>shouldComponentUpdate函数决定是否re-rendering，默认返回true。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> A = React.createClass(&#123;</div><div class="line">  <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> &#123;<span class="attr">num</span>:<span class="number">1</span>&#125;;</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentDidMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">     <span class="keyword">this</span>.setState(&#123;</div><div class="line">      <span class="attr">num</span>:<span class="number">1</span></div><div class="line">    &#125;)</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentWillUpdate</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"componentWillUpdate:"</span>+<span class="keyword">this</span>.state.num);</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentDidUpdate</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"componentDidUpdate:"</span>+<span class="keyword">this</span>.state.num);</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">render</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">     <span class="built_in">console</span>.log(<span class="string">'render:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.state.num&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</div><div class="line">  &#125;  </div><div class="line">&#125;)</div><div class="line"></div><div class="line">控制台输出：</div><div class="line"><span class="string">"render:1"</span></div><div class="line"><span class="string">"componentWillUpdate:1"</span></div><div class="line"><span class="string">"render:1"</span></div><div class="line"><span class="string">"componentDidUpdate:1"</span></div></pre></td></tr></table></figure></p>
+<p>在React.createClass传入的对象中没用定义shouldComponentUpdate时，默认shouldComponentUpdate钩子函数返回true。令我失望的，原以为react会在此函数中做一个基础的对比，state的<code>无效变化</code>不会导致re-rendering。然而，事实是，只要调用了setState，不管state是否“真正”有变化，shouldComponentUpdate默认都返回true。在这样的情况，也会导致一次重复渲染。因此，<code>建议在shouldComponentUpdate函数中，对state和props的变化进行一次对比，避免重复渲染的情况</code>。<br>当传入对象定义了shouldComponentUpdate函数时，必须返回一个boolean（没有返回值的情况下默认返回false）。那么，在shouldComponentUpdate返回false的时候，又会发生什么呢。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> A = React.createClass(&#123;</div><div class="line">  <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> &#123;<span class="attr">num</span>:<span class="number">1</span>&#125;;</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentDidMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">     <span class="keyword">this</span>.setState(&#123;</div><div class="line">      <span class="attr">num</span>:<span class="number">2</span></div><div class="line">    &#125;)</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">shouldComponentUpdate</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"shouldComponentUpdate:"</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentWillUpdate</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"componentWillUpdate:"</span>+<span class="keyword">this</span>.state.num);</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentDidUpdate</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"componentDidUpdate:"</span>+<span class="keyword">this</span>.state.num);</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">handleClick</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.state.num);</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">render</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">     <span class="built_in">console</span>.log(<span class="string">'render:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;this.handleClick&#125;</span>&gt;</span>&#123;this.state.num&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</div><div class="line">  &#125;  </div><div class="line">&#125;)</div><div class="line"></div><div class="line">控制台输出：</div><div class="line"><span class="string">"render:1"</span></div><div class="line"><span class="string">"shouldComponentUpdate:1"</span></div><div class="line"></div><div class="line">点击button之后，输出：<span class="number">2</span></div></pre></td></tr></table></figure></p>
+<p>shouldComponentUpdate返回false之后，componentWillUpdate、render、componentDidUpdate将都不会执行。<br>但是这样的情况之下，我们可以发现，不管shouldComponentUpdate返回了什么，组件的state还是发生了变化。如果这时候，我们再在操作函数中对state进行一些处理，可能获取的不是我们想要的state。<code>因此，建议，尽量不要在state有变化的时候在shouldComponentUpdate函数中返回false。</code></p>
+<hr>
+<h2 id="componentWillUpdate"><a href="#componentWillUpdate" class="headerlink" title="componentWillUpdate"></a>componentWillUpdate</h2><blockquote>
+<p>Note that you cannot call this.setState() here. If you need to update state in response to a prop change, use componentWillReceiveProps() instead.<br>官网上是这么阐述的，但是实际情况，我们可以在这个函数中setState，并且，与在componentWillMount中改变state中不一样的是，state不仅更改成功了，还触发了re-rendering，因此导致浏览器进入了一种死循环。<br>所以，在componentWillUpdate中<code>不要</code>setState！！！</p>
+</blockquote>
+<hr>
+<h1 id="三、props改变"><a href="#三、props改变" class="headerlink" title="三、props改变"></a>三、props改变</h1><p><img src="/blogImg/props_change_lifecycle.png" alt="props_change" style="width:60%"><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> A = React.createClass(&#123;</div><div class="line">  <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">      <span class="attr">num</span>: <span class="keyword">this</span>.props.num || <span class="number">0</span></div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentWillMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'componentWillMount'</span>);</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentWillUpdate</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'componentWillUpdate'</span>);</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">render</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">     <span class="built_in">console</span>.log(<span class="string">'render:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    <span class="keyword">return</span> (<span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.state.num&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>);</div><div class="line">  &#125;  </div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="keyword">var</span> B = React.createClass(&#123;</div><div class="line">  <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> &#123;<span class="attr">num</span>:<span class="number">1</span>&#125;;</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentDidMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.setState(&#123;</div><div class="line">      <span class="attr">num</span>:<span class="number">2</span></div><div class="line">    &#125;)</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">render</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">A</span> /&gt;</span></span></div><div class="line">  &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">控制台输出：</div><div class="line">componentWillMount"</div><div class="line">"render:0"</div><div class="line">"componentWillUpdate"</div><div class="line">"render:0"</div></pre></td></tr></table></figure></p>
+<p>非常有意思的是，子组件A渲染了两遍。当父组件B的state发生变化时，会触发一次render函数。此时，不管子组件A的state有没有发生变化。子组件A发生了一次update（默认情况下）。假设子组件是比较纯的情况之下，建议在子组件中的shouldComponentUpdate去判断逻辑，避免重复渲染。当然，刚刚询问了身边的大佬，目前还没有这个渲染瓶颈，在state和props比较复杂的情况之下，可以忽略这些。</p>
+<hr>
+<h2 id="componentWillReceiveProps"><a href="#componentWillReceiveProps" class="headerlink" title="componentWillReceiveProps"></a>componentWillReceiveProps</h2><p>这是一个非常有用的钩子函数，我们一般会在这里判断props的变化从而去更新子组件的state，是父子组件通信的常用手段。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> A = React.createClass(&#123;</div><div class="line">  <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">      <span class="attr">num</span>: <span class="keyword">this</span>.props.num || <span class="number">0</span></div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentWillReceiveProps</span>: <span class="function"><span class="keyword">function</span>(<span class="params">nextProps</span>)</span>&#123;</div><div class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>.props.num !== nextProps.num)&#123;</div><div class="line">      <span class="keyword">this</span>.setState(&#123;</div><div class="line">        <span class="attr">num</span>: nextProps.num</div><div class="line">      &#125;)</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">render</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">     <span class="built_in">console</span>.log(<span class="string">'render:'</span>+<span class="keyword">this</span>.state.num);</div><div class="line">    <span class="keyword">return</span> (<span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.state.num&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>);</div><div class="line">  &#125;  </div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="keyword">var</span> B = React.createClass(&#123;</div><div class="line">  <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> &#123;<span class="attr">num</span>:<span class="number">1</span>&#125;;</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">componentDidMount</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.setState(&#123;</div><div class="line">      <span class="attr">num</span>:<span class="number">2</span></div><div class="line">    &#125;)</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">render</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">A</span> <span class="attr">num</span>=<span class="string">&#123;this.state.num&#125;/</span>&gt;</span></span></div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="四、移除"><a href="#四、移除" class="headerlink" title="四、移除"></a>四、移除</h1><p><img src="/blogImg/unmount.png" alt="unmount_lifecycle" style="width:60%"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+            <a href="/tags/React/" rel="tag"># React</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/12/关于js作用域那些事/" rel="next" title="关于js作用域那些事">
+                <i class="fa fa-chevron-left"></i> 关于js作用域那些事
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400"
+               alt="顾鑫燕" />
+          <p class="site-author-name" itemprop="name">顾鑫燕</p>
+          <p class="site-description motion-element" itemprop="description">吃吃吃&&睡睡睡</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/guxinyan" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:850836576@qq.com" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-link"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://zhanjingbo.site/" title="Zhan's Blog" target="_blank">Zhan's Blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、初始化"><span class="nav-number">1.</span> <span class="nav-text">一、初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#componentWillMount"><span class="nav-number">1.1.</span> <span class="nav-text">componentWillMount</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#componentDidMount"><span class="nav-number">1.2.</span> <span class="nav-text">componentDidMount</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、state改变"><span class="nav-number">2.</span> <span class="nav-text">二、state改变</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#shouldComponentUpdate"><span class="nav-number">2.1.</span> <span class="nav-text">shouldComponentUpdate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#componentWillUpdate"><span class="nav-number">2.2.</span> <span class="nav-text">componentWillUpdate</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、props改变"><span class="nav-number">3.</span> <span class="nav-text">三、props改变</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#componentWillReceiveProps"><span class="nav-number">3.1.</span> <span class="nav-text">componentWillReceiveProps</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、移除"><span class="nav-number">4.</span> <span class="nav-text">四、移除</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">顾鑫燕</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
