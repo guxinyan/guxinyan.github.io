@@ -1,0 +1,712 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Angular,前端," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="场景在一次偶然的需求中，遇到了这样一种情况：输入对应的查询条件之后，点击按钮，向后端发送请求，由后端进行验证（前端无法验证一些情况），假设后端返回true，则打开一个新窗口，否则进行错误提示。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="window.open拦截问题">
+<meta property="og:url" content="http://yoursite.com/2017/05/10/window-open拦截问题/index.html">
+<meta property="og:site_name" content="Gu's Blog">
+<meta property="og:description" content="场景在一次偶然的需求中，遇到了这样一种情况：输入对应的查询条件之后，点击按钮，向后端发送请求，由后端进行验证（前端无法验证一些情况），假设后端返回true，则打开一个新窗口，否则进行错误提示。">
+<meta property="og:image" content="http://yoursite.com/blogImg/window-open-scene.png">
+<meta property="og:updated_time" content="2017-05-10T12:00:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="window.open拦截问题">
+<meta name="twitter:description" content="场景在一次偶然的需求中，遇到了这样一种情况：输入对应的查询条件之后，点击按钮，向后端发送请求，由后端进行验证（前端无法验证一些情况），假设后端返回true，则打开一个新窗口，否则进行错误提示。">
+<meta name="twitter:image" content="http://yoursite.com/blogImg/window-open-scene.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/10/window-open拦截问题/"/>
+
+
+
+
+
+  <title> window.open拦截问题 | Gu's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Gu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/10/window-open拦截问题/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="顾鑫燕">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Gu's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Gu's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                window.open拦截问题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-10T15:50:22+08:00">
+                2017-05-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/problem-solving/" itemprop="url" rel="index">
+                    <span itemprop="name">problem solving</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h1><p><img src="/blogImg/window-open-scene.png" alt="场景示意图" width="400px;"><br>在一次偶然的需求中，遇到了这样一种情况：输入对应的查询条件之后，点击按钮，向后端发送请求，由后端进行验证（前端无法验证一些情况），假设后端返回true，则打开一个新窗口，否则进行错误提示。<br><a id="more"></a></p>
+<hr>
+<h2 id="刚开始的使用方式"><a href="#刚开始的使用方式" class="headerlink" title="刚开始的使用方式"></a>刚开始的使用方式</h2><p>按钮有点击事件，大意如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">handelClick</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    Service.valid(params).then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</div><div class="line">        <span class="keyword">if</span>(!data)<span class="keyword">return</span>;</div><div class="line">        <span class="keyword">var</span> url = <span class="string">'xxxx'</span>;</div><div class="line">        <span class="built_in">window</span>.open(url);</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>但是这样的情况下，新开的窗口会被大多数浏览器拦截。<br>第一反应，我觉得可能是在异步请求回调函数中打开窗口导致的，所以进行了以下试验：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">handelClick</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> newWin = <span class="literal">false</span>;</div><div class="line">    <span class="keyword">var</span> url = <span class="string">'xxxx'</span>;</div><div class="line">    Service.valid(params).then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</div><div class="line">        <span class="keyword">if</span>(!data)<span class="keyword">return</span>;</div><div class="line">        newWin = <span class="literal">true</span>;</div><div class="line">    &#125;);</div><div class="line">    newWin &amp;&amp; (<span class="built_in">window</span>.open(url));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这样并没有任何反应，这个锅呢可能就要promise来背了。</p>
+<blockquote>
+<p>promise中then指定的回调函数会在当前脚本所有同步任务执行完才会执行。</p>
+</blockquote>
+<p>所以，流程是先执行newWin &amp;&amp; (window.open(url))这行代码，然后才执行newWin = true。<br>下意识呢，马上，我讲下面的部分代码改成了异步模式<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">handelClick</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> newWin = <span class="literal">false</span>;</div><div class="line">    <span class="keyword">var</span> url = <span class="string">'xxxx'</span>;</div><div class="line">    Service.valid(params).then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</div><div class="line">        <span class="keyword">if</span>(!data)<span class="keyword">return</span>;</div><div class="line">        newWin = <span class="literal">true</span>;</div><div class="line">    &#125;);</div><div class="line">    <span class="keyword">var</span> timer = setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">if</span>(newWin)&#123;</div><div class="line">            <span class="built_in">window</span>.open(url);</div><div class="line">            clearInterval(timer);</div><div class="line">        &#125;</div><div class="line">    &#125;,<span class="number">300</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然而，弹窗是出现了，还是被拦截了。当然，我还没死心，也试过了promise的方式去控制弹窗，也没有起作用。但是如果，我不是通过service改变newWin的值，直接设置为newWin为true的话，窗口并没有被拦截。<br>所以：</p>
+<blockquote>
+<p>依赖于异步请求结果改变某些值的改变来控制开启弹窗，都会被浏览器拦截。</p>
+</blockquote>
+<hr>
+<h2 id="我所尝试的大部分的解决方案"><a href="#我所尝试的大部分的解决方案" class="headerlink" title="我所尝试的大部分的解决方案"></a>我所尝试的大部分的解决方案</h2><h3 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">handelClick</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> newWin = <span class="built_in">window</span>.open();</div><div class="line">    <span class="keyword">var</span> url = <span class="string">'xxxx'</span>;</div><div class="line">    Service.valid(params).then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</div><div class="line">        <span class="keyword">if</span>(!data)<span class="keyword">return</span>;</div><div class="line">        newWin.location = url;</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个方法并不太适合当前的使用场景，因为在后端返回false的时候，会有一个空白弹窗，我们也可以用newWin.close()去控制，但是在交互体验上并不提倡。但是在一些针对不同后端返回结果，打开不同页面的需求，这个方法还是很合适的。</p>
+<h3 id="模拟a标签"><a href="#模拟a标签" class="headerlink" title="模拟a标签"></a>模拟a标签</h3><p>模拟a标签有两种方式：动态生成a标签和在页面中写一个隐藏a标签，触发a标签的点击事件。然而这两种方式都不太适合异步请求回调的场景。</p>
+<h3 id="模拟form表单"><a href="#模拟form表单" class="headerlink" title="模拟form表单"></a>模拟form表单</h3><p>同a标签</p>
+<h3 id="利用事件冒泡"><a href="#利用事件冒泡" class="headerlink" title="利用事件冒泡"></a>利用事件冒泡</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">ng-click</span>=<span class="string">"newWindow()"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">ng-click</span>=<span class="string">"handelClick($event)"</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">a</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">handelClick</span>(<span class="params">event</span>)</span>&#123;</div><div class="line">    <span class="keyword">if</span>(参数不对)&#123;</div><div class="line">        event.stopPropagation();</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    Service.valid(params).then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</div><div class="line">        <span class="keyword">if</span>(!data)&#123;</div><div class="line">            event.stopPropagation();</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line">funtion newWindow()&#123;</div><div class="line">    <span class="keyword">var</span> url = <span class="string">'xxxx'</span>;</div><div class="line">    <span class="built_in">window</span>.open(url); </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这段代码中，我加了一个前端自身的表单验证。</p>
+<ul>
+<li>当验证不通过的时候，也的确是先触发了里层的handleClick事件，并阻止了冒泡行为。</li>
+<li>当验证通过且后端返回true的时候，并没有按我理想状态走。而是先触发了newWindow事件，再走的回调函数。这时候，promise又得背一回锅了。我的又一个方案失效了。</li>
+</ul>
+<hr>
+<h2 id="最终的解决方案：设置同步"><a href="#最终的解决方案：设置同步" class="headerlink" title="最终的解决方案：设置同步"></a>最终的解决方案：设置同步</h2><p>这里以jquery举例<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$.ajax(&#123;</div><div class="line">    <span class="attr">async</span>:<span class="literal">false</span>,  <span class="comment">//同步</span></div><div class="line">    url:<span class="string">'xxxx'</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>这个方法也的确是生效的。但是由于项目基础封装原因，项目调用了angular的$http去实现接口请求。（无奈脸）我也就止步于此了，只能找交互大大改交互了。</p>
+<p>如果有大神有好方法的话，请多多指教哦。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Angular/" rel="tag"># Angular</a>
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/28/AngularJS中的radio和checkbox/" rel="next" title="AngularJS中的radio和checkbox">
+                <i class="fa fa-chevron-left"></i> AngularJS中的radio和checkbox
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400"
+               alt="顾鑫燕" />
+          <p class="site-author-name" itemprop="name">顾鑫燕</p>
+          <p class="site-description motion-element" itemprop="description">吃吃吃&&睡睡睡</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/guxinyan" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:850836576@qq.com" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-link"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://zhanjingbo.site/" title="Zhan's Blog" target="_blank">Zhan's Blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#场景"><span class="nav-number">1.</span> <span class="nav-text">场景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#刚开始的使用方式"><span class="nav-number">1.1.</span> <span class="nav-text">刚开始的使用方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我所尝试的大部分的解决方案"><span class="nav-number">1.2.</span> <span class="nav-text">我所尝试的大部分的解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#重定向"><span class="nav-number">1.2.1.</span> <span class="nav-text">重定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模拟a标签"><span class="nav-number">1.2.2.</span> <span class="nav-text">模拟a标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模拟form表单"><span class="nav-number">1.2.3.</span> <span class="nav-text">模拟form表单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#利用事件冒泡"><span class="nav-number">1.2.4.</span> <span class="nav-text">利用事件冒泡</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最终的解决方案：设置同步"><span class="nav-number">1.3.</span> <span class="nav-text">最终的解决方案：设置同步</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">顾鑫燕</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
