@@ -94,7 +94,7 @@
 <meta property="og:description" content="Webpack现在已经成为了前端模块化开发的标配。具体的理论基础介绍呢，这篇文章就不做赘述了。直接从实践入手，一一解释相关。全文基于webpack3.6.0。可能因为版本不一产生部分不同，但大体肯定是一致的。
 
 安装和使用安装方式webpack可以作为就全局的npm包安装， 也可以在当前项目中安装12npm install -g webpacknpm install --save-dev webp">
-<meta property="og:updated_time" content="2017-09-30T09:07:34.000Z">
+<meta property="og:updated_time" content="2017-10-17T09:01:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="webpack小记（一）">
 <meta name="twitter:description" content="Webpack现在已经成为了前端模块化开发的标配。具体的理论基础介绍呢，这篇文章就不做赘述了。直接从实践入手，一一解释相关。全文基于webpack3.6.0。可能因为版本不一产生部分不同，但大体肯定是一致的。
@@ -420,21 +420,20 @@
 <ul>
 <li>tips:loader我们也可以理解是一个链式操作，处理顺序<em>从右往左</em>。<br>style-loader 将模块的导出作为样式添加到 DOM 中<br>css-loader 解析 CSS 文件后，使用 import 加载，并且返回 CSS 代码<br>sass-loader 加载和转译 SASS/SCSS 文件</li>
 </ul>
-<h2 id="处理图片"><a href="#处理图片" class="headerlink" title="处理图片"></a>处理图片</h2><!-- > npm install --save-dev url-loader
-
-将hello.scss修改为：
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">.hello&#123;</div><div class="line">  background: red;</div><div class="line">  width: 200px;</div><div class="line">  height: 100px;</div><div class="line">  background-image: url('../../../img/1.png');</div><div class="line">  .world&#123;</div><div class="line">    background: green;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="处理图片"><a href="#处理图片" class="headerlink" title="处理图片"></a>处理图片</h2><blockquote>
+<p>npm install –save-dev url-loader</p>
+</blockquote>
+<p>将hello.scss修改为：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">.hello&#123;</div><div class="line">  background: red;</div><div class="line">  width: 200px;</div><div class="line">  height: 100px;</div><div class="line">  background-image: url('../../../img/1.png');</div><div class="line">  .world&#123;</div><div class="line">    background: green;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>在webpack配置中添加loader<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">test</span>: <span class="regexp">/\.(png|jpg|jpeg|gif)$/</span>,</div><div class="line">  <span class="attr">loader</span>: <span class="string">"url-loader"</span>,</div><div class="line">  <span class="attr">include</span>: includePath,</div><div class="line">  <span class="attr">exclude</span>: excludePath</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>打包，刷新浏览器，我们就能看到helloworld的背景图已经有填充了。。<br>给url添加一个参数<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">query: &#123;</div><div class="line">  <span class="attr">options</span>: &#123;</div><div class="line">    <span class="attr">limit</span>: <span class="number">8192</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>再次打包，我们发现，图片被转成base64编码了。</p>
 <blockquote>
 <p>The url-loader works like the file-loader, but can return a DataURL if the file is smaller than a byte limit</p>
 </blockquote>
-<p>这是npm官网上url-loader的解释，当我们设置了limit的时候，如果图片的大小 –&gt;</p>
+<p>这是npm官网上url-loader的解释，当我们设置了limit的时候，如果图片的大小小于limit的设置时，会转成base64编码。</p>
 <hr>
-<h1 id="构建本地服务器"><a href="#构建本地服务器" class="headerlink" title="构建本地服务器"></a>构建本地服务器</h1><hr>
-<p>参考链接<br><a href="http://www.imooc.com/learn/802">http://www.imooc.com/learn/802</a></p>
--->
+<p>参考链接<br><a href="http://www.imooc.com/learn/802" target="_blank" rel="external">http://www.imooc.com/learn/802</a></p>
+
       
     </div>
 
