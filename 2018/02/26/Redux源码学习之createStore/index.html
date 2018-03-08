@@ -86,14 +86,14 @@
 
 <meta name="description" content="之前在项目中，偶尔交互复杂的页面我们项目组会引入了Redux，快速迭代的过程中，我们在网上快速学习了用法，跑了demo，照葫芦画瓢地用进了项目里。当时自己的感受就是：一层套一层，这里要用这个，那里要结合那个，整个redux的引入，合着react-redux（项目用的react），用起来就是一种仿照的迷惘，只知道“要这样用”。现在前端圈可能就会有这种现象，结合的东西太多太复杂，当我们引入新东西的时候">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redux系列之createStore">
-<meta property="og:url" content="http://yoursite.com/2018/02/26/Redux系列之createStore/index.html">
+<meta property="og:title" content="Redux源码学习之createStore">
+<meta property="og:url" content="http://yoursite.com/2018/02/26/Redux源码学习之createStore/index.html">
 <meta property="og:site_name" content="Gu's Blog">
 <meta property="og:description" content="之前在项目中，偶尔交互复杂的页面我们项目组会引入了Redux，快速迭代的过程中，我们在网上快速学习了用法，跑了demo，照葫芦画瓢地用进了项目里。当时自己的感受就是：一层套一层，这里要用这个，那里要结合那个，整个redux的引入，合着react-redux（项目用的react），用起来就是一种仿照的迷惘，只知道“要这样用”。现在前端圈可能就会有这种现象，结合的东西太多太复杂，当我们引入新东西的时候">
 <meta property="og:image" content="http://yoursite.com/blogImg/store.png">
-<meta property="og:updated_time" content="2018-02-27T08:08:52.000Z">
+<meta property="og:updated_time" content="2018-03-01T07:52:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Redux系列之createStore">
+<meta name="twitter:title" content="Redux源码学习之createStore">
 <meta name="twitter:description" content="之前在项目中，偶尔交互复杂的页面我们项目组会引入了Redux，快速迭代的过程中，我们在网上快速学习了用法，跑了demo，照葫芦画瓢地用进了项目里。当时自己的感受就是：一层套一层，这里要用这个，那里要结合那个，整个redux的引入，合着react-redux（项目用的react），用起来就是一种仿照的迷惘，只知道“要这样用”。现在前端圈可能就会有这种现象，结合的东西太多太复杂，当我们引入新东西的时候">
 <meta name="twitter:image" content="http://yoursite.com/blogImg/store.png">
 
@@ -123,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/02/26/Redux系列之createStore/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/02/26/Redux源码学习之createStore/"/>
 
 
 
 
 
-  <title> Redux系列之createStore | Gu's Blog </title>
+  <title> Redux源码学习之createStore | Gu's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -250,7 +250,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/26/Redux系列之createStore/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/26/Redux源码学习之createStore/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="顾鑫燕">
@@ -274,7 +274,7 @@
             
             
               
-                Redux系列之createStore
+                Redux源码学习之createStore
               
             
           </h1>
@@ -342,7 +342,7 @@
 
       
         <p>之前在项目中，偶尔交互复杂的页面我们项目组会引入了Redux，快速迭代的过程中，我们在网上快速学习了用法，跑了demo，照葫芦画瓢地用进了项目里。当时自己的感受就是：一层套一层，这里要用这个，那里要结合那个，整个redux的引入，合着react-redux（项目用的react），用起来就是一种仿照的迷惘，只知道“要这样用”。现在前端圈可能就会有这种现象，结合的东西太多太复杂，当我们引入新东西的时候可能一下子需要学习的是这个新技术的整个生态圈，学起来反而有些吃力。这时候，我们需要做的是，抛开各种花哨的便利工具，告诉自己最简单的用法怎么整。</p>
-<p>看了redux的源码之后，我可以这么说，createStore就是redux的精髓，刚开始，我们只需要这个函数做了什么，根本不用care别的。<span style="color:red">全文基于redux 3.7.2</span>。</p>
+<p>看了redux的源码之后，我可以这么说，createStore就是redux的精髓，刚开始，我们只需要这个函数做了什么，根本不用care别的。</p>
 <a id="more"></a>
 <hr>
 <h1 id="简析"><a href="#简析" class="headerlink" title="简析"></a>简析</h1><p>createStore的函数整个我们可以缩为以下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">createStore</span>(<span class="params">reducer, preloadedState, enhancer</span>)</span>&#123;</div><div class="line">  <span class="comment">//enhancer参数判断</span></div><div class="line"></div><div class="line">  <span class="comment">//reducer基础格式校验</span></div><div class="line"></div><div class="line">  <span class="comment">//dispatch(&#123;type: ActionTypes.INIT&#125;)</span></div><div class="line"></div><div class="line">  <span class="comment">//</span></div><div class="line">  <span class="comment">// 返回对象store </span></div><div class="line">  <span class="comment">// &#123;</span></div><div class="line">  <span class="comment">//  dispatch,</span></div><div class="line">  <span class="comment">//  subscribe,</span></div><div class="line">  <span class="comment">//  getState,</span></div><div class="line">  <span class="comment">//  replaceReducer,</span></div><div class="line">  <span class="comment">//  [$$observable]: observable</span></div><div class="line">  <span class="comment">// &#125;</span></div><div class="line">  <span class="comment">//</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -370,6 +370,7 @@
 <h2 id="observable"><a href="#observable" class="headerlink" title="[$$observable]"></a>[$$observable]</h2><p>留给 可观察/响应式库的接口。具体就不详细描述了， 有兴趣可以看看RxJS。</p>
 <hr>
 <h1 id="简易用法"><a href="#简易用法" class="headerlink" title="简易用法"></a>简易用法</h1><p>一个简易的用法<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; createStore &#125; <span class="keyword">from</span> <span class="string">'redux'</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> ActionTypes = &#123;</div><div class="line">  <span class="string">'INCREMENT'</span>: <span class="string">'INCREMENT'</span>,</div><div class="line">  <span class="string">'DECREMENT'</span>: <span class="string">'DECREMENT'</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">state = <span class="number">0</span>, action</span>)</span>&#123;</div><div class="line">  <span class="keyword">switch</span>(action.type)&#123;</div><div class="line">    <span class="keyword">case</span> ActionTypes.INCREMENT: <span class="keyword">return</span> state+<span class="number">1</span>;</div><div class="line">    <span class="keyword">case</span> ActionTypes.DECREMENT: <span class="keyword">return</span> state<span class="number">-1</span>;</div><div class="line">    <span class="keyword">default</span>: <span class="keyword">return</span> state;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> store = createStore(reducer);</div><div class="line"></div><div class="line"><span class="comment">//手动触发</span></div><div class="line">store.dispatch(&#123;<span class="attr">type</span>: <span class="string">'INCREMENT'</span>&#125;); <span class="comment">//store: 1</span></div><div class="line">store.dispatch(&#123;<span class="attr">type</span>: <span class="string">'INCREMENT'</span>&#125;); <span class="comment">//store: 2</span></div><div class="line">store.dispatch(&#123;<span class="attr">type</span>: <span class="string">'DECREMENT'</span>&#125;); <span class="comment">//store: 1</span></div></pre></td></tr></table></figure></p>
+<p><span style="color:red">全文基于redux 3.7.2</span></p>
 
       
     </div>
@@ -413,6 +414,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/01/Redux源码学习之提供的那些便利api/" rel="prev" title="Redux源码学习之提供的那些便利api">
+                Redux源码学习之提供的那些便利api <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -480,7 +485,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-count">15</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
