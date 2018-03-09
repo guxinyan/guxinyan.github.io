@@ -95,7 +95,7 @@ composecompose是函数式编程中的一个概念，通过合成多个函数，
 
 composecompose是函数式编程中的一个概念，通过合成多个函数，最终生成一个把接收函数从右到左合成的超级厉害版的函数。">
 <meta property="og:image" content="http://yoursite.com/blogImg/middleware in redux.png">
-<meta property="og:updated_time" content="2018-03-08T11:51:58.000Z">
+<meta property="og:updated_time" content="2018-03-09T07:26:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redux源码学习之提供的那些便利api">
 <meta name="twitter:description" content="本文我们只讲redux中除了createStore的那些api， 我将这些api称作redux中的便利工具，是为了createStore更好的工作。如果对createStore这个核心api更感兴趣的话， 请看这篇【Redux源码学习之createStore】
@@ -376,8 +376,28 @@ composecompose是函数式编程中的一个概念，通过合成多个函数，
 <p>有一个比较有意思的地方<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> middlewareAPI = &#123;</div><div class="line">  <span class="attr">getState</span>: store.getState,</div><div class="line">  <span class="attr">dispatch</span>: <span class="function">(<span class="params">...args</span>) =&gt;</span> dispatch(...args)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>这里的dispatch用匿名函数包了一层， 而且传入的是dispatch，而不是store.dispatch。<br>为什么呢？因为要保证传给每个middleware的dispatch是最新的，最终合成的。<br>怎么办的的呢？因为匿名函数行成了闭包，对外层dispatch这个变量一直保持着引用关系， 也保证了dispatch不会被销毁。同时呢，dispatch在后面呢被更新为了<code>compose(...chain)(store.dispatch)</code>，也就是我们最终改造的dispatch方法。<br>这其中呢涉及了一点作用域那些事，哈哈， 想起了以前写的一篇博客，有兴趣也可以看看<a href="/2017/01/12/关于js作用域那些事/#more">【关于js作用域那些事】</a>。</p>
 <hr>
-<h1 id="combineReducers"><a href="#combineReducers" class="headerlink" title="combineReducers"></a>combineReducers</h1><hr>
-<h1 id="bindActionCreators"><a href="#bindActionCreators" class="headerlink" title="bindActionCreators"></a>bindActionCreators</h1><p><span style="color:red">全文基于redux 3.7.2</span></p>
+<h1 id="combineReducers"><a href="#combineReducers" class="headerlink" title="combineReducers"></a>combineReducers</h1><p>用法：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> finalReducer = Redux.combineReducers(&#123;</div><div class="line">  <span class="attr">reducer0</span>: reducer0,</div><div class="line">  <span class="attr">reducer1</span>: reducer1,</div><div class="line">  <span class="attr">reducer2</span>: reducer2</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>将独立的reducers整合成一个大家庭，在需要处理处理数据比较多的情况下，比较容易梳理， 并不一定要使用。</p>
+</blockquote>
+<p>源码大概就是：</p>
+<ul>
+<li>刚开始一些规范性检查：<br>1.参数检测<br>2.每个Reducer是否设定初始值</li>
+<li>将传入的Reducer整体对象赋值通过key遍历， 存储在一个finalReducers对象中</li>
+<li>返回一个函数（其实就是一个整体Reducer）<br>1.参数为state, action<br>2.遍历finalReducers中的所有reducer， 触发对应的action， 复制给新的state。<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> hasChanged = <span class="literal">false</span></div><div class="line">   <span class="keyword">const</span> nextState = &#123;&#125;</div><div class="line">   <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; finalReducerKeys.length; i++) &#123;</div><div class="line">     <span class="keyword">const</span> key = finalReducerKeys[i]</div><div class="line">     <span class="keyword">const</span> reducer = finalReducers[key]</div><div class="line">     <span class="keyword">const</span> previousStateForKey = state[key]</div><div class="line">     <span class="keyword">const</span> nextStateForKey = reducer(previousStateForKey, action)</div><div class="line">     <span class="keyword">if</span> (<span class="keyword">typeof</span> nextStateForKey === <span class="string">'undefined'</span>) &#123;</div><div class="line">       <span class="keyword">const</span> errorMessage = getUndefinedStateErrorMessage(key, action)</div><div class="line">       <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(errorMessage)</div><div class="line">     &#125;</div><div class="line">     nextState[key] = nextStateForKey</div><div class="line">     hasChanged = hasChanged || nextStateForKey !== previousStateForKey  </div><div class="line">     <span class="comment">//个人觉得这个对比基本对于小reducer返回是对象的没有任何作用</span></div><div class="line">     <span class="comment">//由于对象引用经过Reducer,一定会改变</span></div><div class="line">   &#125;</div><div class="line">   <span class="keyword">return</span> hasChanged ? nextState : state</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>所以用了combineReducers这个方法时， 我们以为只调用了对应state的reducer， 其实并不是， dispatch action调用了所有的 reducer。</p>
+</blockquote>
+<hr>
+<h1 id="bindActionCreators"><a href="#bindActionCreators" class="headerlink" title="bindActionCreators"></a>bindActionCreators</h1><p>用法：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> bindActions = Redux.bindActionCreators(Actions, store.dispatch);</div><div class="line"><span class="comment">//然后直接出发bindActions的对应方法即可</span></div></pre></td></tr></table></figure></p>
+<blockquote>
+<p> 处理传入的action, 返回一个拥有同样key, 但是每个方法用dispatch包括的对象。</p>
+</blockquote>
+<p>这样，触发方法的时候，不到到处都可以去写store.dispatch(action), 只要直接调用action即可。</p>
+<p>源码我就不贴了， 有兴趣可以去官网看看。大概就是， 遍历对象的key， 然后赋值一个新的对象， 并将所有的方法用dispatch包裹一遍， 返回这个新对象。</p>
+<p><span style="color:red">全文基于redux 3.7.2</span></p>
 
       
     </div>
