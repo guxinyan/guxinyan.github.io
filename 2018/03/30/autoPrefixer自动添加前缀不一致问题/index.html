@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="前端,打包,webpack," />
+  <meta name="keywords" content="前端,打包," />
 
 
 
@@ -84,25 +84,16 @@
 
 
 
-<meta name="description" content="当我们项目需要下载一个模块的时候，我们安装npm包（在项目目录下面npm install module_name）的时候，很多时候我们会在后面加上–save-dev 或 –save。这两个参数代表什么呢？
-初识  相信很多人都会回答：
-
-npm install module-name -save 自动把模块和版本号添加到dependencies部分npm install module-name -">
+<meta name="description" content="问题描述今天在工作中遇到这样一个问题，两台机器同一个页面打包出来的页面样式在ios8上的表现非常不一致！仔细看了页面的样式，发现用了flex布局， 而ios8需要-webkit-前缀。暂时先不考虑css写法严不严谨的问题， 但是咱们不是用了autoPrefixer自动处理css样式了吗？？？这貌似没生效啊？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="包应该放在devDependencies还是dependencies">
-<meta property="og:url" content="http://yoursite.com/2017/11/02/包应该放在devDependencies还是dependencies/index.html">
+<meta property="og:title" content="autoPrefixer自动添加前缀不一致问题">
+<meta property="og:url" content="http://yoursite.com/2018/03/30/autoPrefixer自动添加前缀不一致问题/index.html">
 <meta property="og:site_name" content="Gu's Blog">
-<meta property="og:description" content="当我们项目需要下载一个模块的时候，我们安装npm包（在项目目录下面npm install module_name）的时候，很多时候我们会在后面加上–save-dev 或 –save。这两个参数代表什么呢？
-初识  相信很多人都会回答：
-
-npm install module-name -save 自动把模块和版本号添加到dependencies部分npm install module-name -">
-<meta property="og:updated_time" content="2018-03-30T12:30:29.000Z">
+<meta property="og:description" content="问题描述今天在工作中遇到这样一个问题，两台机器同一个页面打包出来的页面样式在ios8上的表现非常不一致！仔细看了页面的样式，发现用了flex布局， 而ios8需要-webkit-前缀。暂时先不考虑css写法严不严谨的问题， 但是咱们不是用了autoPrefixer自动处理css样式了吗？？？这貌似没生效啊？">
+<meta property="og:updated_time" content="2018-03-30T12:56:35.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="包应该放在devDependencies还是dependencies">
-<meta name="twitter:description" content="当我们项目需要下载一个模块的时候，我们安装npm包（在项目目录下面npm install module_name）的时候，很多时候我们会在后面加上–save-dev 或 –save。这两个参数代表什么呢？
-初识  相信很多人都会回答：
-
-npm install module-name -save 自动把模块和版本号添加到dependencies部分npm install module-name -">
+<meta name="twitter:title" content="autoPrefixer自动添加前缀不一致问题">
+<meta name="twitter:description" content="问题描述今天在工作中遇到这样一个问题，两台机器同一个页面打包出来的页面样式在ios8上的表现非常不一致！仔细看了页面的样式，发现用了flex布局， 而ios8需要-webkit-前缀。暂时先不考虑css写法严不严谨的问题， 但是咱们不是用了autoPrefixer自动处理css样式了吗？？？这貌似没生效啊？">
 
 
 
@@ -130,13 +121,13 @@ npm install module-name -save 自动把模块和版本号添加到dependencies�
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/02/包应该放在devDependencies还是dependencies/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/03/30/autoPrefixer自动添加前缀不一致问题/"/>
 
 
 
 
 
-  <title> 包应该放在devDependencies还是dependencies | Gu's Blog </title>
+  <title> autoPrefixer自动添加前缀不一致问题 | Gu's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -257,7 +248,7 @@ npm install module-name -save 自动把模块和版本号添加到dependencies�
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/02/包应该放在devDependencies还是dependencies/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/30/autoPrefixer自动添加前缀不一致问题/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="顾鑫燕">
@@ -281,7 +272,7 @@ npm install module-name -save 自动把模块和版本号添加到dependencies�
             
             
               
-                包应该放在devDependencies还是dependencies
+                autoPrefixer自动添加前缀不一致问题
               
             
           </h1>
@@ -294,8 +285,8 @@ npm install module-name -save 自动把模块和版本号添加到dependencies�
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-02T17:22:57+08:00">
-                2017-11-02
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-30T20:29:03+08:00">
+                2018-03-30
               </time>
             
 
@@ -313,8 +304,8 @@ npm install module-name -save 自动把模块和版本号添加到dependencies�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/总结/" itemprop="url" rel="index">
-                    <span itemprop="name">总结</span>
+                  <a href="/categories/problem-solving/" itemprop="url" rel="index">
+                    <span itemprop="name">problem solving</span>
                   </a>
                 </span>
 
@@ -348,15 +339,20 @@ npm install module-name -save 自动把模块和版本号添加到dependencies�
       
 
       
-        <p>当我们项目需要下载一个模块的时候，我们安装npm包（在项目目录下面npm install module_name）的时候，很多时候我们会在后面加上–save-dev 或 –save。这两个参数代表什么呢？</p>
-<h1 id="初识"><a href="#初识" class="headerlink" title="初识"></a>初识</h1><p>  相信很多人都会回答：</p>
-<blockquote>
-<p>npm install module-name -save 自动把模块和版本号添加到dependencies部分<br>npm install module-name -save-dev 自动把模块和版本号添加到devdependencies部分</p>
-</blockquote>
+        <h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>今天在工作中遇到这样一个问题，两台机器同一个页面打包出来的页面样式在ios8上的表现非常不一致！<br>仔细看了页面的样式，发现用了flex布局， 而ios8需要-webkit-前缀。<br>暂时先不考虑css写法严不严谨的问题， 但是咱们不是用了autoPrefixer自动处理css样式了吗？？？<br>这貌似没生效啊？</p>
 <a id="more"></a>
-<p>dependencies是什么呢？ <code>生产环境</code>。<br>devdependencies是什么呢？ <code>开发环境</code>。<br>网上也可以查到很多资料，大概回答意思是，我们搭建一个webpack+react+es6的项目，像webpack babel这种负责打包编译的，我们就应该装在开发环境，像react之类的装在生产环境。<br>可是为什么呢？<br>我们不能告诉我们这样做，我们就只这样做，我们要知之其所以然呀。<br>恩。我试着吧react放进了dependencies，打包出来的文件依然可以运行，并没有什么问题。<br>why ？？？难道文档只是建议而已吗？？？</p>
-<h1 id="实质区别"><a href="#实质区别" class="headerlink" title="实质区别"></a>实质区别</h1><p>如果我们只是单纯的做项目，那么我们可简单地认为生产环境和开发环境做为一种友善的提示，实质没有什么区别；但是，如果在发布npm包的时候，两种环境安装方式是有很大区别的！！！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">假设有以下两个模块：</div><div class="line">模块A</div><div class="line">- devDependencies</div><div class="line">  模块B</div><div class="line">- dependencies</div><div class="line">  模块C</div><div class="line"></div><div class="line">模块D</div><div class="line">- devDependencies</div><div class="line">  模块E</div><div class="line">- dependencies</div><div class="line">  模块A</div><div class="line"></div><div class="line">npm install D的时候， 下载的模块为：</div><div class="line">- D</div><div class="line">- A</div><div class="line">- C</div><div class="line"></div><div class="line">当我们下载了模块D的源码，并且在根目录下npm install， 下载的模块为：</div><div class="line">- A</div><div class="line">- C</div><div class="line">- E</div></pre></td></tr></table></figure></p>
-<p>所以，在发布npm包的时候，本身dependencies下的模块会作为依赖，一起被下载；devDependencies下面的模块就不会自动下载了；但对于项目而言，npm install 会自动下载devDependencies和dependencies下面的模块。</p>
+<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p>自己观察了一下两台机器打包出来的样式， 表现正常的那台样式，既有-ms-前缀，又有-webkit-前缀；而表现异常的那台竟然只有-ms-前缀，为什么不自动添加webkit呢？<br>一模一样的打包配置，为什么会有两种结果呢？<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">autoprefixer(&#123; <span class="attr">browsers</span>: [<span class="string">"last 2 versions"</span>] &#125;)</div></pre></td></tr></table></figure></p>
+<p>这是一个官网上很正常的配置，去搜寻当前目前各个浏览器稳定的两个版本，查看支持特性，不支持，则相对应加前缀。</p>
+<blockquote>
+<p>You have different versions of caniuse-db on different machines.</p>
+</blockquote>
+<p>在网上搜了很多资料看到这样一句话，last 2 versions 是依赖本地机器下载的caniuse-db的。<br>所以，不同机器上下载的caniuse-db不同导致了这样的结果。</p>
+<p>到这里， 我又有了一个疑问。我们本地包的下载都是依赖package.json的呀，里面都写死了autoprefixer包的版本号，为什么会产生caniuse-db包的不用呢。<br>搜了（相关资料之后）[<a href="https://docs.npmjs.com/getting-started/using-a-package.json" target="_blank" rel="external">https://docs.npmjs.com/getting-started/using-a-package.json</a>]</p>
+<blockquote>
+<p>npm uses Semantic Versioning, or, as we often refer to it, SemVer, to manage versions and ranges of versions of packages.<br>If you have a package.json file in your directory and you run npm install, npm will look at the dependencies that are listed in that file and download the latest versions, using semantic versioning.</p>
+</blockquote>
+<p>当我们输入npm install之后， 发生了什么？<br>npm包有个大小版本的概念， 直接npm install之后，依赖package.json中的大版本控制，比如1.0.2，会去搜寻这个<code>1.0</code>版本集中最新的那个npm包，也许是1.9.9哈哈。</p>
+<p>附上重要链接：<br>(autoprefixer)[<a href="https://github.com/postcss/autoprefixer#options" target="_blank" rel="external">https://github.com/postcss/autoprefixer#options</a>]<br>(Browserslist)[<a href="https://github.com/browserslist/browserslist#queries" target="_blank" rel="external">https://github.com/browserslist/browserslist#queries</a>]</p>
 
       
     </div>
@@ -384,8 +380,6 @@ npm install module-name -save 自动把模块和版本号添加到dependencies�
           
             <a href="/tags/打包/" rel="tag"># 打包</a>
           
-            <a href="/tags/webpack/" rel="tag"># webpack</a>
-          
         </div>
       
 
@@ -393,8 +387,8 @@ npm install module-name -save 自动把模块和版本号添加到dependencies�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/27/webpack小记（一）/" rel="next" title="webpack小记（一）">
-                <i class="fa fa-chevron-left"></i> webpack小记（一）
+              <a href="/2018/03/26/读react-redux源码的一些认知/" rel="next" title="读react-redux源码的一些认知">
+                <i class="fa fa-chevron-left"></i> 读react-redux源码的一些认知
               </a>
             
           </div>
@@ -402,10 +396,6 @@ npm install module-name -save 自动把模块和版本号添加到dependencies�
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/02/26/Redux源码学习之createStore/" rel="prev" title="Redux源码学习之createStore">
-                Redux源码学习之createStore <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -559,7 +549,7 @@ npm install module-name -save 自动把模块和版本号添加到dependencies�
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#初识"><span class="nav-number">1.</span> <span class="nav-text">初识</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实质区别"><span class="nav-number">2.</span> <span class="nav-text">实质区别</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原因"><span class="nav-number">2.</span> <span class="nav-text">原因</span></a></li></ol></div>
             
 
           </div>
