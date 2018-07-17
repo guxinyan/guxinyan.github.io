@@ -1,0 +1,778 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端,React," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="React 16之后，不仅仅是切换到MIT协议，还有了很多突破性改变和新功能，本文主要是对react 16及之后的版本更新有个大致的整理。
+
+Fiber架构v16.0.0更新
+Stack Reconciler存在什么问题呢在原有的React中，更新过程是同步的。什么意思呢？React挂载或者更新的时候，递归调用各个组件生命周期，对比virtual DOM，更新DOM树，整个过程一旦开始，不可被打断">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React v16.0.0+更新了什么">
+<meta property="og:url" content="http://yoursite.com/2018/07/16/React-v16-0-0-更新了什么/index.html">
+<meta property="og:site_name" content="Gu's Blog">
+<meta property="og:description" content="React 16之后，不仅仅是切换到MIT协议，还有了很多突破性改变和新功能，本文主要是对react 16及之后的版本更新有个大致的整理。
+
+Fiber架构v16.0.0更新
+Stack Reconciler存在什么问题呢在原有的React中，更新过程是同步的。什么意思呢？React挂载或者更新的时候，递归调用各个组件生命周期，对比virtual DOM，更新DOM树，整个过程一旦开始，不可被打断">
+<meta property="og:image" content="http://yoursite.com/blogImg/stackR.jpg">
+<meta property="og:image" content="http://yoursite.com/blogImg/fiberR.jpg">
+<meta property="og:image" content="http://yoursite.com/blogImg/reactPhase.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/fiberPhase1.png">
+<meta property="og:updated_time" content="2018-07-17T12:26:15.827Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="React v16.0.0+更新了什么">
+<meta name="twitter:description" content="React 16之后，不仅仅是切换到MIT协议，还有了很多突破性改变和新功能，本文主要是对react 16及之后的版本更新有个大致的整理。
+
+Fiber架构v16.0.0更新
+Stack Reconciler存在什么问题呢在原有的React中，更新过程是同步的。什么意思呢？React挂载或者更新的时候，递归调用各个组件生命周期，对比virtual DOM，更新DOM树，整个过程一旦开始，不可被打断">
+<meta name="twitter:image" content="http://yoursite.com/blogImg/stackR.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/16/React-v16-0-0-更新了什么/"/>
+
+
+
+
+
+  <title> React v16.0.0+更新了什么 | Gu's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Gu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/16/React-v16-0-0-更新了什么/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lareina">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Gu's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Gu's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                React v16.0.0+更新了什么
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-16T20:16:29+08:00">
+                2018-07-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>React 16之后，不仅仅是切换到MIT协议，还有了很多突破性改变和新功能，本文主要是对react 16及之后的版本更新有个大致的整理。</p>
+<hr>
+<h1 id="Fiber架构"><a href="#Fiber架构" class="headerlink" title="Fiber架构"></a>Fiber架构</h1><p><em>v16.0.0更新</em></p>
+<h2 id="Stack-Reconciler存在什么问题呢"><a href="#Stack-Reconciler存在什么问题呢" class="headerlink" title="Stack Reconciler存在什么问题呢"></a>Stack Reconciler存在什么问题呢</h2><p>在原有的React中，更新过程是同步的。什么意思呢？<br>React挂载或者更新的时候，递归调用各个组件生命周期，对比virtual DOM，更新DOM树，整个过程一旦开始，不可被打断。这样的设计，在组件层级比较深，dom树比较庞大的时候，就会有问题出现了。<br><a id="more"></a></p>
+<ul>
+<li>整个浏览器主线程被渲染过程占用比较长的时间，导致进程阻塞，让界面失去响应。<blockquote>
+<p>因为JavaScript在浏览器的主线程上运行，恰好与样式计算、布局以及许多情况下的绘制一起运行。如果JavaScript运行时间过长，就会阻塞这些其他工作，可能导致掉帧。</p>
+</blockquote>
+</li>
+<li>渲染过程没有优先级可言，不同状态变化是需要有优先级的，比如动画的状态变化，避免动画卡帧一般优先级要高一些。</li>
+</ul>
+<p>这里有一张图可以表示这个过程：<br><img src="/blogImg/stackR.jpg" width="600px;"></p>
+<h2 id="Fiber-Reconciler"><a href="#Fiber-Reconciler" class="headerlink" title="Fiber Reconciler"></a>Fiber Reconciler</h2><p>Fiber是React核心算法的重构，旨在为了更好的扩大在布局，动画，手势方面的适应性。Fiber把渲染过程分成了一个个chunk， 变同步为异步，进一步提升用户感知性能。<br><img src="/blogImg/fiberR.jpg" width="600px;"><br>Fiber的关键特性：增量渲染(将渲染任务拆分成块，匀到多帧)。这种情况下，渲染任务每次只做一小段，做完之后就把控制权交还给主线程，而不像之前那样一条路走到黑的占用主线程到底。<br>好处呢：</p>
+<ul>
+<li>渲染过程中有机会将主线程交给react以外的js调用（比如一些用户操作）</li>
+<li>渲染有了优先级，能让高优先级的工作抢先做。</li>
+</ul>
+<h2 id="Fiber-reconciler的两个阶段"><a href="#Fiber-reconciler的两个阶段" class="headerlink" title="Fiber reconciler的两个阶段"></a>Fiber reconciler的两个阶段</h2><p>Fiber之后，React将更新分为了两个部分。<br><img src="/blogImg/reactPhase.png" width="600px;"></p>
+<ul>
+<li><p>phase1: render/reconciliation<span style="color:red">(可中断)</span><br><img src="/blogImg/fiberPhase1.png" width="500px;"><br>左边灰色是一个fiber tree，每一个fiber是一个工作单元，自顶向下逐节点构建workInprogress tree（所谓的中间态）。<br>一个工作单元判断更新，更新节点状态（props，state, context），调用<code>render</code>，向上归并effect list（简单理解为更新点）。</p>
+<blockquote>
+<p>构建workInProgress tree的过程就是diff的过程，通过requestIdleCallback来调度执行一组任务，每完成一个任务后回来看看有没有插队的（更紧急的），每完成一组任务，把时间控制权交还给主线程，直到下一次requestIdleCallback回调再继续构建workInProgress tree。<br>所有的工作单元工作完毕之后，就进入了pendingCommit状态。</p>
+</blockquote>
+</li>
+<li><p>phase2: commit<span style="color:red">(不可中断)</span><br>处理effect list（包括3种处理：更新DOM树、调用组件生命周期函数以及更新ref等内部状态）。<br>将所有变更一次性更新到DOM树上。</p>
+</li>
+</ul>
+<p>被划分的生命周期：</p>
+<ul>
+<li><p>phase 1: </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">componentWillMount</div><div class="line">componentWillReceiveProps</div><div class="line">shouldComponentUpdate</div><div class="line">componentWillUpdate</div></pre></td></tr></table></figure>
+</li>
+<li><p>phase 2:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">componentDidMount</div><div class="line">componentDidUpdate</div><div class="line">componentWillUnmount</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>第一阶段的生命周期会随时被打断，因为增加了所谓优先级的概念。假设组件A在阶段1过程中，时间片用完了，把控制权交给主线程之后，发现有更高优先级的事情要做。这时候，组件A的渲染过程就会被放弃，只能等待下次<strong>从头开始</strong>。<br><strong>所以！！！第一阶段的生命周期很有可能会被调用多次！！所以我们建议第一阶段的生命周期函数最好都是纯函数。</strong></p>
+<p>现阶段这个异步渲染React还没有默认开放。</p>
+<p><strong>参考链接</strong><br><a href="https://www.youtube.com/watch?v=ZCuYPiUIONs" target="_blank" rel="external">Lin Clark 的演讲视频</a><br><a href="https://zhuanlan.zhihu.com/p/26027085" target="_blank" rel="external">React Fiber是什么</a><br><a href="http://www.ayqy.net/blog/dive-into-react-fiber/" target="_blank" rel="external">完全理解React Fiber</a></p>
+<hr>
+<h1 id="生命周期的改变"><a href="#生命周期的改变" class="headerlink" title="生命周期的改变"></a>生命周期的改变</h1><p><em>v16.3.0更新</em></p>
+<h2 id="即将移除的"><a href="#即将移除的" class="headerlink" title="即将移除的"></a>即将移除的</h2><p>这三个生命周期可能会导致一些不安全的体验，随着异步渲染模式的引进，问题会越来越多。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">componentWillMount</div><div class="line">componentWillReceiveProps</div><div class="line">componentWillUpdate</div></pre></td></tr></table></figure></p>
+<p>在v16.3.0中，为这三个生命周期函数增加了别名： UNSAFE_componentWillMount, UNSAFE_componentWillReceiveProps, 和UNSAFE_componentWillUpdate。<br>componentWillMount,componentWillReceiveProps,componentWillUpdate在16.x版本中还是可以使用的，但是React会在开发环境启用warning。在17.0及以后， 会将这三个老的生命周期函数彻底移除，只提供带’UNSAFE’前缀的用法。</p>
+<h2 id="新增的"><a href="#新增的" class="headerlink" title="新增的"></a>新增的</h2><p>同时呢，React新增了以下两个生命周期函数。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> getDerivedStateFromProps(props, state)</div></pre></td></tr></table></figure></p>
+<p>getDerivedStateFromProps会在render函数之前被调用，在初次挂载阶段和后期的更新阶段都会调用。<br>需要返回一个object去更新state, 或者返回null表示没有更新。</p>
+<p>这个阶段拿不到组件的实例。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">getSnapshotBeforeUpdate(prevProps, prevState)</div></pre></td></tr></table></figure>
+<p>在update发生的时候，render函数之后，组件渲染之前被调用。<br>这个函数的返回值将会作为componentDidUpdate的第三个参数。</p>
+<hr>
+<h1 id="更好的错误处理方式"><a href="#更好的错误处理方式" class="headerlink" title="更好的错误处理方式"></a>更好的错误处理方式</h1><p><em>v16.0.0更新</em><br>React 16提供了一种新的错误处理的机制，叫“error boundary”。</p>
+<h2 id="以前的错误处理"><a href="#以前的错误处理" class="headerlink" title="以前的错误处理"></a>以前的错误处理</h2><p>其实以前的react有一个秘而不宣的处理错误的方式：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">unstable_handleError: <span class="function"><span class="keyword">function</span>(<span class="params">error</span>)</span>&#123;</div><div class="line">  <span class="keyword">this</span>.setState(&#123;<span class="attr">error</span>: <span class="string">"oops"</span>&#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>但是这个处理方式：</p>
+<ul>
+<li>只能处理render抛出的Error，其他的生命周期函数触发不了。</li>
+<li>能捕获当前组件本身抛出的Error，但是还是会阻碍接下来的渲染。</li>
+</ul>
+<h2 id="componentDidCatch"><a href="#componentDidCatch" class="headerlink" title="componentDidCatch"></a>componentDidCatch</h2><p>React 16之后引入了新的生命周期函数<code>componentDidCatch(error, info)</code>。<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">error就是捕获的错误</div><div class="line">info：错误信息栈，例如：</div><div class="line">&#123;</div><div class="line">  componentStack: "</div><div class="line">    in BuggyCounter (created by App)</div><div class="line">    in ErrorBoundary (created by App)</div><div class="line">    in div (created by App)</div><div class="line">    in App"</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>用法如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ErrorBoundary</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</div><div class="line">  <span class="keyword">constructor</span>(props) &#123;</div><div class="line">    <span class="keyword">super</span>(props);</div><div class="line">    <span class="keyword">this</span>.state = &#123; <span class="attr">hasError</span>: <span class="literal">false</span> &#125;;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  componentDidCatch(error, info) &#123;</div><div class="line">    <span class="keyword">this</span>.setState(&#123; <span class="attr">hasError</span>: <span class="literal">true</span> &#125;);</div><div class="line">    <span class="comment">// 上报错误</span></div><div class="line">    logErrorToMyService(error, info);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  render() &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.state.hasError) &#123;</div><div class="line">      <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Something went wrong.<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.props.children;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;ErrorBoundary&gt;</div><div class="line">  <span class="xml"><span class="tag">&lt;<span class="name">otherComponent</span>&gt;</span><span class="tag">&lt;/<span class="name">otherComponent</span>&gt;</span></span></div><div class="line">&lt;<span class="regexp">/ErrorBoundary&gt;</span></div></pre></td></tr></table></figure>
+<p>ErrorBoundary作为一个专门处理错误的异常边界组件。</p>
+<ul>
+<li>能捕获所有子组件，任何生命周期函数抛出的异常</li>
+<li>只能捕获子组件抛出的error，组件本身的异常无法捕获。<br>因此我们的异常边界组件不能涉及业务代码，否则将无法捕获自身逻辑错误。</li>
+</ul>
+<p>子组件抛出的错误会层层往上传递，直到被捕获，一到捕获之后，就不会再往上传播。</p>
+<blockquote>
+<p>注意：<br>Error boundaries 不能捕获的错误</p>
+<ul>
+<li>事件处理</li>
+<li>异步 (e.g. setTimeout or requestAnimationFrame callbacks)</li>
+<li>服务端渲染</li>
+<li>组件自身的错误</li>
+</ul>
+</blockquote>
+<h2 id="错误处理表现"><a href="#错误处理表现" class="headerlink" title="错误处理表现"></a>错误处理表现</h2><p>在React16之后，未被捕获的错误，错误会一直往上抛，直到React将整个React Tree全部卸载。<br>同时，在开发环境，控制台会输出所有的错误，包括被捕获的错误。</p>
+<hr>
+<h1 id="新的render返回"><a href="#新的render返回" class="headerlink" title="新的render返回"></a>新的render返回</h1><hr>
+<h1 id="portal"><a href="#portal" class="headerlink" title="portal"></a>portal</h1><hr>
+<h1 id="标签自定义属性"><a href="#标签自定义属性" class="headerlink" title="标签自定义属性"></a>标签自定义属性</h1><hr>
+<h1 id="新的Context-API"><a href="#新的Context-API" class="headerlink" title="新的Context API"></a>新的Context API</h1><hr>
+<h1 id="新的ref-API"><a href="#新的ref-API" class="headerlink" title="新的ref API"></a>新的ref API</h1><hr>
+<h1 id="严格模式组件"><a href="#严格模式组件" class="headerlink" title="严格模式组件"></a>严格模式组件</h1><hr>
+<h1 id="更强的服务端渲染"><a href="#更强的服务端渲染" class="headerlink" title="更强的服务端渲染"></a>更强的服务端渲染</h1><hr>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+            <a href="/tags/React/" rel="tag"># React</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/30/autoPrefixer自动添加前缀不一致问题/" rel="next" title="autoPrefixer自动添加前缀不一致问题">
+                <i class="fa fa-chevron-left"></i> autoPrefixer自动添加前缀不一致问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400"
+               alt="Lareina" />
+          <p class="site-author-name" itemprop="name">Lareina</p>
+          <p class="site-description motion-element" itemprop="description">吃吃吃&&睡睡睡</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/guxinyan" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:850836576@qq.com" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-link"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://zhanjingbo.site/" title="Zhan's Blog" target="_blank">Zhan's Blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Fiber架构"><span class="nav-number">1.</span> <span class="nav-text">Fiber架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack-Reconciler存在什么问题呢"><span class="nav-number">1.1.</span> <span class="nav-text">Stack Reconciler存在什么问题呢</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fiber-Reconciler"><span class="nav-number">1.2.</span> <span class="nav-text">Fiber Reconciler</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fiber-reconciler的两个阶段"><span class="nav-number">1.3.</span> <span class="nav-text">Fiber reconciler的两个阶段</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生命周期的改变"><span class="nav-number">2.</span> <span class="nav-text">生命周期的改变</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#即将移除的"><span class="nav-number">2.1.</span> <span class="nav-text">即将移除的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新增的"><span class="nav-number">2.2.</span> <span class="nav-text">新增的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#更好的错误处理方式"><span class="nav-number">3.</span> <span class="nav-text">更好的错误处理方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#以前的错误处理"><span class="nav-number">3.1.</span> <span class="nav-text">以前的错误处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#componentDidCatch"><span class="nav-number">3.2.</span> <span class="nav-text">componentDidCatch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#错误处理表现"><span class="nav-number">3.3.</span> <span class="nav-text">错误处理表现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#新的render返回"><span class="nav-number">4.</span> <span class="nav-text">新的render返回</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#portal"><span class="nav-number">5.</span> <span class="nav-text">portal</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#标签自定义属性"><span class="nav-number">6.</span> <span class="nav-text">标签自定义属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#新的Context-API"><span class="nav-number">7.</span> <span class="nav-text">新的Context API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#新的ref-API"><span class="nav-number">8.</span> <span class="nav-text">新的ref API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#严格模式组件"><span class="nav-number">9.</span> <span class="nav-text">严格模式组件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#更强的服务端渲染"><span class="nav-number">10.</span> <span class="nav-text">更强的服务端渲染</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他"><span class="nav-number">11.</span> <span class="nav-text">其他</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lareina</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
