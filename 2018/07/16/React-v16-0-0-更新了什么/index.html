@@ -100,7 +100,7 @@ Stack Reconciler存在什么问题呢在原有的React中，更新过程是同�
 <meta property="og:image" content="http://yoursite.com/blogImg/fiberR.jpg">
 <meta property="og:image" content="http://yoursite.com/blogImg/reactPhase.png">
 <meta property="og:image" content="http://yoursite.com/blogImg/fiberPhase1.png">
-<meta property="og:updated_time" content="2018-08-05T09:04:07.918Z">
+<meta property="og:updated_time" content="2018-08-06T08:19:55.959Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React v16.0.0+更新了什么">
 <meta name="twitter:description" content="React 16之后，不仅仅是切换到MIT协议，还有了很多突破性改变和新功能，本文主要是对react 16及之后的版本更新有个大致的整理。
@@ -471,8 +471,32 @@ Stack Reconciler存在什么问题呢在原有的React中，更新过程是同�
 <h3 id="Consumer"><a href="#Consumer" class="headerlink" title="Consumer"></a>Consumer</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;Consumer&gt;</div><div class="line">  &#123;value =&gt; <span class="comment">/* render something based on the context value */</span>&#125;</div><div class="line">&lt;<span class="regexp">/Consumer&gt;</span></div></pre></td></tr></table></figure>
 <p>Consumer子元素必须是一个函数，函数返回React node（同render要求）<br><a href="https://reactjs.org/docs/context.html#examples" target="_blank" rel="external">examples</a></p>
 <hr>
-<h1 id="新的ref-API"><a href="#新的ref-API" class="headerlink" title="新的ref API"></a>新的ref API</h1><h2 id="createRef-API"><a href="#createRef-API" class="headerlink" title="createRef API"></a>createRef API</h2><h2 id="forwardRef-API"><a href="#forwardRef-API" class="headerlink" title="forwardRef API"></a>forwardRef API</h2><hr>
-<h1 id="严格模式组件"><a href="#严格模式组件" class="headerlink" title="严格模式组件"></a>严格模式组件</h1><hr>
+<h1 id="新的ref-API"><a href="#新的ref-API" class="headerlink" title="新的ref API"></a>新的ref API</h1><h2 id="createRef-API"><a href="#createRef-API" class="headerlink" title="createRef API"></a>createRef API</h2><p><strong> 什么时候使用ref </strong><br>三种应用场景</p>
+<ul>
+<li>获取焦点，文本选择，媒体播放</li>
+<li>触发动画</li>
+<li>集成第三方库的时候</li>
+</ul>
+<p><strong> 新的api用法 </strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyComponent</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</div><div class="line">  <span class="keyword">constructor</span>(props) &#123;</div><div class="line">    <span class="keyword">super</span>(props);</div><div class="line">    <span class="keyword">this</span>.myRef = React.createRef();</div><div class="line">  &#125;</div><div class="line">  render() &#123;</div><div class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&#123;this.myRef&#125;</span> /&gt;</span>;</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> node = <span class="keyword">this</span>.myRef.current;</div></pre></td></tr></table></figure>
+<p>node的值取决于ref设置在什么哪里：</p>
+<ul>
+<li>ref作为HTML element的属性值设置，则node拿到的是DOM element</li>
+<li>ref作为自定义组件的属性值设置，则node拿到的是组件的实例</li>
+</ul>
+<p><strong>functional components 不能使用ref属性，因为functional components没有实例， 但是在functional components组件内部可以使用Ref</strong></p>
+<h2 id="forwardRef-API"><a href="#forwardRef-API" class="headerlink" title="forwardRef API"></a>forwardRef API</h2><p>Ref forwarding提供了一种新方式，能将ref传递给组件的子元素。<br>简单小栗子：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> FancyButton = React.forwardRef(<span class="function">(<span class="params">props, ref</span>) =&gt;</span> (</div><div class="line">  <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">ref</span>=<span class="string">&#123;ref&#125;</span> <span class="attr">className</span>=<span class="string">"FancyButton"</span>&gt;</span></span></div><div class="line">    &#123;props.children&#125;</div><div class="line">  <span class="tag">&lt;/<span class="name">button</span>&gt;</span></div><div class="line">));</div><div class="line"></div><div class="line"><span class="keyword">const</span> ref = React.createRef();</div><div class="line"><span class="xml"><span class="tag">&lt;<span class="name">FancyButton</span> <span class="attr">ref</span>=<span class="string">&#123;ref&#125;</span>&gt;</span>Click me!<span class="tag">&lt;/<span class="name">FancyButton</span>&gt;</span></span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> BtnNode = ref.current;</div></pre></td></tr></table></figure></p>
+<p>FancyButton组件必须要用React.forwardRef(props, ref)包一层。</p>
+<hr>
+<h1 id="严格模式组件"><a href="#严格模式组件" class="headerlink" title="严格模式组件"></a>严格模式组件</h1><p>在v16.3.0 React新增了一种严格模式组件，可以帮助我们更好的预防bug。当然，只影响开发环境。<br>用法有点类似Fragment<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">ExampleApplication</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> (</div><div class="line">    <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></div><div class="line">      <span class="tag">&lt;<span class="name">React.StrictMode</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">ComponentOne</span> /&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">ComponentTwo</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">React.StrictMode</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">  );</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>React只会检测<strictmode></strictmode>包含的内容。<br>严格模式下，</p>
+<ul>
+<li>鉴定不安全的生命周期函数</li>
+<li>对ref的字符串用法进行警告处理</li>
+<li>对老的context api的用法进行警告处理</li>
+<li>检测不可预期的副作用（结合上文的异步渲染，生命周期中的一些操作导致的问题）</li>
+</ul>
+<hr>
 <h1 id="更强的服务端渲染"><a href="#更强的服务端渲染" class="headerlink" title="更强的服务端渲染"></a>更强的服务端渲染</h1><hr>
 <h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1>
       
