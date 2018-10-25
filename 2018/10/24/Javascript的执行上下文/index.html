@@ -1,0 +1,719 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端,javaScript," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="重新翻到执行上下文这个概念，发现当年阅读的时候，只关注了作用域链这件事，忽略了这个比较有意思的知识点。那么今天来稍稍整理下。
+执行上下文栈(ESC)所谓的执行上下文栈，也就是执行环境栈。每个函数都有自己的执行上下文，执行每个函数的时候，都会进入函数的执行环境。那么在执行过程中，引擎怎么去管理这么多执行环境呢。因此有了这样的一个执行环境栈的概念。“栈”， 就是数据结构中的概念，一个后进先出的表。这可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript的执行上下文">
+<meta property="og:url" content="http://yoursite.com/2018/10/24/Javascript的执行上下文/index.html">
+<meta property="og:site_name" content="Gu's Blog">
+<meta property="og:description" content="重新翻到执行上下文这个概念，发现当年阅读的时候，只关注了作用域链这件事，忽略了这个比较有意思的知识点。那么今天来稍稍整理下。
+执行上下文栈(ESC)所谓的执行上下文栈，也就是执行环境栈。每个函数都有自己的执行上下文，执行每个函数的时候，都会进入函数的执行环境。那么在执行过程中，引擎怎么去管理这么多执行环境呢。因此有了这样的一个执行环境栈的概念。“栈”， 就是数据结构中的概念，一个后进先出的表。这可">
+<meta property="og:image" content="http://yoursite.com/blogImg/execution_context.png">
+<meta property="og:updated_time" content="2018-10-25T02:03:10.025Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Javascript的执行上下文">
+<meta name="twitter:description" content="重新翻到执行上下文这个概念，发现当年阅读的时候，只关注了作用域链这件事，忽略了这个比较有意思的知识点。那么今天来稍稍整理下。
+执行上下文栈(ESC)所谓的执行上下文栈，也就是执行环境栈。每个函数都有自己的执行上下文，执行每个函数的时候，都会进入函数的执行环境。那么在执行过程中，引擎怎么去管理这么多执行环境呢。因此有了这样的一个执行环境栈的概念。“栈”， 就是数据结构中的概念，一个后进先出的表。这可">
+<meta name="twitter:image" content="http://yoursite.com/blogImg/execution_context.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/24/Javascript的执行上下文/"/>
+
+
+
+
+
+  <title> Javascript的执行上下文 | Gu's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Gu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/24/Javascript的执行上下文/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lareina">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Gu's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Gu's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Javascript的执行上下文
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-24T15:41:04+08:00">
+                2018-10-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>重新翻到执行上下文这个概念，发现当年阅读的时候，只关注了作用域链这件事，忽略了这个比较有意思的知识点。那么今天来稍稍整理下。</p>
+<h1 id="执行上下文栈-ESC"><a href="#执行上下文栈-ESC" class="headerlink" title="执行上下文栈(ESC)"></a>执行上下文栈(ESC)</h1><p>所谓的执行上下文栈，也就是执行环境栈。<br>每个函数都有自己的执行上下文，执行每个函数的时候，都会进入函数的执行环境。那么在执行过程中，引擎怎么去管理这么多执行环境呢。因此有了这样的一个执行环境栈的概念。“栈”， 就是数据结构中的概念，一个后进先出的表。<br>这可以理解为我们平时经常用的递归。</p>
+<a id="more"></a>
+<h2 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h2><p>高程上的一个经典栗子：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> color = <span class="string">'blue'</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">changeColor</span> (<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="keyword">var</span> anotherColor = <span class="string">'red'</span>;</div><div class="line">   </div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">swapColor</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> tempColor = anotherColor;</div><div class="line">    anotherColor = color;</div><div class="line">    color = tempColor;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  swapColor();</div><div class="line">&#125;</div><div class="line"></div><div class="line">changeColor();</div></pre></td></tr></table></figure></p>
+<p>首先刚开始执行的时候，我们的环境栈为：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ESCStack = [</div><div class="line">  globalContext</div><div class="line">];</div></pre></td></tr></table></figure></p>
+<p>到14行changeColor()时， changeColor的执行环境入栈：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ESCStack = [</div><div class="line">  changeColorContext,</div><div class="line">  globalContext</div><div class="line">];</div></pre></td></tr></table></figure></p>
+<p>进入changeColor之后，11行swapColor()时，swapColor的执行环境入栈：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ESCStack = [</div><div class="line">  swapColorContext,</div><div class="line">  changeColorContext,</div><div class="line">  globalContext</div><div class="line">];</div></pre></td></tr></table></figure></p>
+<p>然后随着代码依次执行完成，swapColorContext， changeColorContext，globalContext依次出栈。<br>一个简单的示意图：<br><img src="/blogImg/execution_context.png" alt=""></p>
+<h2 id="执行环境有哪几种"><a href="#执行环境有哪几种" class="headerlink" title="执行环境有哪几种"></a>执行环境有哪几种</h2><ul>
+<li>全局环境：最外围的一个执行环境， 根据js实现所在宿主环境不同，表示执行环境的对象也不一样。全局执行环境直到应用程序退出时才会被销毁。</li>
+<li>函数环境：每个函数都有自己的执行环境，当执行流进入一个函数时，函数的环境就会被推入环境栈。</li>
+<li>eval：eval内部的文本被执行的时候</li>
+</ul>
+<hr>
+<h1 id="执行上下文"><a href="#执行上下文" class="headerlink" title="执行上下文"></a>执行上下文</h1><p>讲完了执行上下文栈，那么再来说说什么每一个组成–执行上下文。</p>
+<h2 id="什么是执行上下文"><a href="#什么是执行上下文" class="headerlink" title="什么是执行上下文"></a>什么是执行上下文</h2><p>执行上下文可以抽象成以下对象：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">executionContextObj = &#123;</div><div class="line">    <span class="attr">scopeChain</span>: [], <span class="comment">//作用域链</span></div><div class="line">    variableObject: &#123;&#125;, <span class="comment">//变量对象 || 活动对象</span></div><div class="line">    <span class="keyword">this</span>: &#123;&#125;  <span class="comment">//</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>作用域链和this其实是一个老生常谈的话题了，那么变量对象是什么呢？<br>每个执行环境中定义的所有<em>变量</em>和<em>函数</em>都保存在这个对象中。<br>全局环境的变量对象就是全局对象。那么在函数里呢，我们用活动对象来作为变量对象。</p>
+<p>稍微提一嘴作用域，<br>执行上下文的作用域的前端，始终都是当前执行环境的变量对象，下一个变量对象来自当前环境的外部环境，依次类推，一直延续到全局对象。这就是作用域链的组成。</p>
+<h2 id="函数执行过程"><a href="#函数执行过程" class="headerlink" title="函数执行过程"></a>函数执行过程</h2><p>每次调用函数，都会创建新的执行上下文，而调用执行上下文分为两个阶段，创建和激活。</p>
+<h3 id="创建的时候"><a href="#创建的时候" class="headerlink" title="创建的时候"></a>创建的时候</h3><p>当函数被调用，但是还未执行任何内部代码之前， 会做以下三件事：<br>1、创建作用域链，即设置scopeChain的值<br>2、创建变量VO</p>
+<ul>
+<li>创建arguments对象，初始化参数名称和值并创建引用的复制</li>
+<li>扫描上下文的函数声明：<br>找到函数声明，将函数名和函数的引用存入VO中；若VO中已存在同名函数，<em>覆盖</em>。</li>
+<li>扫描上下文的变量声明：<br>找到变量声明，将变量名存入VO中，并初始化为undefined；若VO中已存在同名属性(变量，函数，形参)，则<em>不做任何操作继续往下扫描</em>。</li>
+</ul>
+<p>3、求this的值</p>
+<h3 id="执行的时候"><a href="#执行的时候" class="headerlink" title="执行的时候"></a>执行的时候</h3><p>在代码执行阶段，会根据代码的顺序，一行一行执行，改变变量对象的值。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>那么从函数创建和执行的过程，我们有了一些变量提升的思考。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">变量提升的值是<span class="literal">undefined</span></div><div class="line">函数提升的是整个声明</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(a); <span class="comment">// undefined</span></div><div class="line">  <span class="built_in">console</span>.log(f); <span class="comment">// ƒ f()&#123;&#125;</span></div><div class="line"></div><div class="line">  <span class="keyword">var</span> a = <span class="string">'red'</span>;</div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">test();</div></pre></td></tr></table></figure></p>
+<p>看看变量声明和函数声明的优先级<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">变量已存在同名变量的时候，不会覆盖，依旧打印出函数，而不是<span class="literal">undefined</span></div><div class="line">函数已存在同名函数的时候，直接覆盖</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(f); <span class="comment">//ƒ f()&#123;</span></div><div class="line">                  <span class="comment">//我不一样 </span></div><div class="line">                <span class="comment">// &#125;</span></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="comment">//我不一样 </span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">var</span> f = <span class="string">'color'</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">test();</div></pre></td></tr></table></figure></p>
+<p>看看变量声明和形参的优先级<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params">f</span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(f); <span class="comment">//red</span></div><div class="line">  <span class="keyword">var</span> f = <span class="string">'color'</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">test(<span class="string">'red'</span>);</div></pre></td></tr></table></figure></p>
+<p>再加个函数声明看看<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params">f</span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(f); <span class="comment">// f f()&#123;&#125;</span></div><div class="line">  <span class="keyword">var</span> f = <span class="string">'color'</span>;</div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">test(<span class="string">'red'</span>);</div></pre></td></tr></table></figure></p>
+<p>*以上，我们可以悄咪咪得出这样的创建时变量提升的优先级： 函数 &gt; 形参 &gt; 变量</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">这个例子是想说明，变量提升的优先级只存在于创建时，至于函数执行时候的变量覆盖，完全看代码执行到哪一行了。</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(f); <span class="comment">//ƒ f()&#123;</span></div><div class="line">                  <span class="comment">//我不一样 </span></div><div class="line">                <span class="comment">// &#125;</span></div><div class="line">  <span class="keyword">var</span> f = <span class="string">'color'</span>;</div><div class="line">  <span class="built_in">console</span>.log(f); <span class="comment">// color</span></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="comment">//我不一样 </span></div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">test();</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+            <a href="/tags/javaScript/" rel="tag"># javaScript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/16/React-v16-0-0-更新了什么/" rel="next" title="React v16.0.0+更新了什么">
+                <i class="fa fa-chevron-left"></i> React v16.0.0+更新了什么
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400"
+               alt="Lareina" />
+          <p class="site-author-name" itemprop="name">Lareina</p>
+          <p class="site-description motion-element" itemprop="description">吃吃吃&&睡睡睡</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/guxinyan" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:850836576@qq.com" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-link"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://zhanjingbo.site/" title="Zhan's Blog" target="_blank">Zhan's Blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#执行上下文栈-ESC"><span class="nav-number">1.</span> <span class="nav-text">执行上下文栈(ESC)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#举个栗子"><span class="nav-number">1.1.</span> <span class="nav-text">举个栗子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行环境有哪几种"><span class="nav-number">1.2.</span> <span class="nav-text">执行环境有哪几种</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#执行上下文"><span class="nav-number">2.</span> <span class="nav-text">执行上下文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是执行上下文"><span class="nav-number">2.1.</span> <span class="nav-text">什么是执行上下文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数执行过程"><span class="nav-number">2.2.</span> <span class="nav-text">函数执行过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建的时候"><span class="nav-number">2.2.1.</span> <span class="nav-text">创建的时候</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行的时候"><span class="nav-number">2.2.2.</span> <span class="nav-text">执行的时候</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">2.2.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lareina</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
