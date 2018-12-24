@@ -1,0 +1,742 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端,自动化测试," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="经常听到自动化测试，单元测试这种概念，一直以来我都处于一种概念性的了解。其实目前我们大环境下，还是很多公司对自动化测试这块没有那么重视，很多都还处于人工测试的阶段。改一个公用函数，我们生怕影响到所有的业务代码，靠人力，我们无法说服自己测试全面了。那么，自动化测试可以做到哪种地步呢？
+
+什么是单元测试我们有很多测试方法，单元测试、集成测试、端到端测试、可视化测试、功能测试等等等等。不同的人对不同的测">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单元测试">
+<meta property="og:url" content="http://yoursite.com/2018/12/15/单元测试/index.html">
+<meta property="og:site_name" content="Gu's Blog">
+<meta property="og:description" content="经常听到自动化测试，单元测试这种概念，一直以来我都处于一种概念性的了解。其实目前我们大环境下，还是很多公司对自动化测试这块没有那么重视，很多都还处于人工测试的阶段。改一个公用函数，我们生怕影响到所有的业务代码，靠人力，我们无法说服自己测试全面了。那么，自动化测试可以做到哪种地步呢？
+
+什么是单元测试我们有很多测试方法，单元测试、集成测试、端到端测试、可视化测试、功能测试等等等等。不同的人对不同的测">
+<meta property="og:image" content="http://yoursite.com/blogImg/test.png">
+<meta property="og:image" content="http://yoursite.com/blogImg/test_coverage.png">
+<meta property="og:updated_time" content="2018-12-24T12:51:30.019Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="单元测试">
+<meta name="twitter:description" content="经常听到自动化测试，单元测试这种概念，一直以来我都处于一种概念性的了解。其实目前我们大环境下，还是很多公司对自动化测试这块没有那么重视，很多都还处于人工测试的阶段。改一个公用函数，我们生怕影响到所有的业务代码，靠人力，我们无法说服自己测试全面了。那么，自动化测试可以做到哪种地步呢？
+
+什么是单元测试我们有很多测试方法，单元测试、集成测试、端到端测试、可视化测试、功能测试等等等等。不同的人对不同的测">
+<meta name="twitter:image" content="http://yoursite.com/blogImg/test.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/15/单元测试/"/>
+
+
+
+
+
+  <title> 单元测试 | Gu's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Gu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/15/单元测试/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lareina">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Gu's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Gu's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                单元测试
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-15T16:19:42+08:00">
+                2018-12-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>经常听到自动化测试，单元测试这种概念，一直以来我都处于一种概念性的了解。其实目前我们大环境下，还是很多公司对自动化测试这块没有那么重视，很多都还处于人工测试的阶段。改一个公用函数，我们生怕影响到所有的业务代码，靠人力，我们无法说服自己测试全面了。那么，自动化测试可以做到哪种地步呢？</p>
+<hr>
+<h1 id="什么是单元测试"><a href="#什么是单元测试" class="headerlink" title="什么是单元测试"></a>什么是单元测试</h1><p>我们有很多测试方法，单元测试、集成测试、端到端测试、可视化测试、功能测试等等等等。不同的人对不同的测试方法有不同的理解。<br>业界有这样的一种说法，单元测试和端到端测试是测试的两极，其余的测试都在在这两个测试范围中间。<br>这里我们只聊聊单元测试。那么，什么叫单元测试呢？顾名思义，就是以代码单元为单位的测试。这个代码单元可以是一个函数，一个对象，或者一个类。<br><a id="more"></a><br>其实在自动化之前，我们也在人工做单元测试。比如，本人写了如下一个函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">给url添加参数</div><div class="line">function appendUrl(url, params)&#123;</div><div class="line">  ..... //具体实现</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>校验这个函数写的对不对，常用操作就会在工作台先跑一下示例，看返回对不对。分别测一下：<br>1、没有输入url或者url格式不正确<br>2、参数格式校验是否正确<br>3、输入的url本身有/无参数 返回是否正确<br>4、输入的url带hash 返回是否正确<br>…  （你还可以有更多）<br>以上呢，就是我们平时所谓的测试用例。<br>在没有所谓的自动化测试之前呢，我们一般都是通过人工跑示例测试的。而且，下次换个人开发，更改了这个函数，他自己默默又把这个测试用例都来一遍。现在我们引入单元测试，一个呢让测试更自动化更方便；二呢在不断迭代的过程中，以前的测试用例即可以保证新更改的正确性，又可以方便后面的开发更明了地理解代码实现了什么功能。</p>
+<p>那么接下来，我将用一个简单的例子讲讲，怎么做的这个单元测试。</p>
+<hr>
+<h1 id="测试方案"><a href="#测试方案" class="headerlink" title="测试方案"></a>测试方案</h1><h2 id="简单测试工具介绍"><a href="#简单测试工具介绍" class="headerlink" title="简单测试工具介绍"></a>简单测试工具介绍</h2><p>现在市场上有很多测试工具：</p>
+<ul>
+<li>测试框架: <a href="https://mochajs.org/" target="_blank" rel="external">Mocha</a>、<a href="https://jasmine.github.io/" target="_blank" rel="external">Jasmine</a>、<a href="https://jestjs.io/" target="_blank" rel="external">Jest</a>等等。提供一些清晰明了的语法对测试用例进行分组，描述，测试用例通过， 测试失败了（为什么）等等。Mocha对断言库和工作没做任何限制，比较灵活，相对比较成熟；Jasmine提供了自带的断言；Jest是facebook出品的，React官方推荐的单元测试框架。</li>
+<li>断言库: <a href="https://segmentfault.com/a/1190000004558796#articleHeader16" target="_blank" rel="external">Should.js</a>、<a href="https://www.chaijs.com/" target="_blank" rel="external">Chai</a>等等，以及node自带的<a href="https://nodejs.org/api/assert.html" target="_blank" rel="external">assert</a>。</li>
+<li>代码覆盖率: <a href="https://istanbul.js.org/" target="_blank" rel="external">istanbul</a></li>
+<li>测试平台: <a href="https://karma-runner.github.io/2.0/index.html" target="_blank" rel="external">Karma</a></li>
+</ul>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>这是我对测试目录的初步规划<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">your-app</div><div class="line">├── src/ 被测试代码</div><div class="line">├── test/  测试相关</div><div class="line">│   ├── converage/ 测试报告</div><div class="line">│   ├── unit/ 单元测试相关</div><div class="line">|   │   ├── index.js 测试入口文件</div><div class="line">│   │   └── specs/ 单元测试用例</div><div class="line">│   └── ... 添加其他测试</div><div class="line">└── karma.config.js karma相关配置</div></pre></td></tr></table></figure></p>
+<p>当然业界也会有别的目录规划，直接把单元测试和被测试代码写在一个目录下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">your-app</div><div class="line">├── src/ </div><div class="line">│   ├── cpt1</div><div class="line">│   │  ├── index.js  被测试代码</div><div class="line">│   │  └── index.spec.js 测试用例</div><div class="line">│   ├── cpt2</div><div class="line">│   │   ├── index.js  被测试代码</div><div class="line">│   │   └── index.spec.js  测试用例</div><div class="line">│   └── ... 其他组件</div><div class="line">├── test/  测试相关</div><div class="line">│   ├── converage/ 测试报告</div><div class="line">│   └── index.js 测试入口文件</div><div class="line">└── karma.config.js karma相关配置</div></pre></td></tr></table></figure></p>
+<p>不管哪种目录规划，我们都是有一个测试入口文件，作为执行测试用例的Setup。<br>拿第一种举例，入口文件：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//导入测试用例，具体怎么匹配看具体情况</span></div><div class="line"><span class="keyword">const</span> testsContext = <span class="built_in">require</span>.context(<span class="string">"."</span>, <span class="literal">true</span>, /\.spec$/)</div><div class="line">testsContext.keys().forEach(testsContext)</div></pre></td></tr></table></figure></p>
+<h2 id="karma配置"><a href="#karma配置" class="headerlink" title="karma配置"></a>karma配置</h2><p>我们可以全局安装下karma-cli来初始化测试环境：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -g karma-cli</div></pre></td></tr></table></figure></p>
+<p>初始化测试环境：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">运行</div><div class="line">karma init</div><div class="line">我选择了Mocha测试框架 + PhantomJS运行环境 这样的组合（这个看个人哈） </div><div class="line">这样，初步的 karma.conf.js文件生成了</div></pre></td></tr></table></figure></p>
+<p>PhantomJS是什么呢？如果有兴趣可以看看<a href="http://javascript.ruanyifeng.com/tool/phantomjs.html" target="_blank" rel="external">这里</a></p>
+<blockquote>
+<p>提供一个浏览器环境的命令行接口，你可以把它看作一个“虚拟浏览器”，除了不能浏览，其他与正常浏览器一样。它的内核是WebKit引擎，不提供图形界面，只能在命令行下使用，我们可以用它完成一些特殊的用途</p>
+</blockquote>
+<p>搭建测试环境需要的包：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">npm install -D karma mocha karma-mocha </div><div class="line">npm install -D karma-phantomjs-launcher phantomjs-prebuilt</div></pre></td></tr></table></figure></p>
+<h3 id="配置项"><a href="#配置项" class="headerlink" title="配置项"></a>配置项</h3><p>简单的karma.conf.js配置如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">config</span>) </span>&#123;</div><div class="line">  config.set(&#123;</div><div class="line">    <span class="comment">//测试框架</span></div><div class="line">    frameworks: [<span class="string">'mocha'</span>],</div><div class="line">    <span class="comment">// 测试用例入口文件，入口文件中引入所有测试用例</span></div><div class="line">    files: [</div><div class="line">      <span class="string">'./test/unit/index.js'</span></div><div class="line">    ],</div><div class="line">    <span class="comment">// 为选定脚本指定前处理器</span></div><div class="line">    <span class="comment">// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor</span></div><div class="line">    preprocessors: &#123;</div><div class="line">    &#125;,</div><div class="line">    <span class="comment">// 报告配置</span></div><div class="line">    <span class="comment">// possible values: 'dots', 'progress'</span></div><div class="line">    <span class="comment">// available reporters: https://npmjs.org/browse/keyword/karma-reporter</span></div><div class="line">    reporters: [<span class="string">'progress'</span>],</div><div class="line">    <span class="comment">// web server port</span></div><div class="line">    port: <span class="number">9876</span>,</div><div class="line">    <span class="comment">// enable / disable colors in the output (reporters and logs)</span></div><div class="line">    colors: <span class="literal">true</span>,</div><div class="line">    <span class="comment">// 日志级别</span></div><div class="line">    <span class="comment">// 取值: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG</span></div><div class="line">    logLevel: config.LOG_INFO,</div><div class="line">    <span class="comment">// 启用/禁用监视文件变化重新执行测试的功能</span></div><div class="line">    <span class="comment">// enable / disable watching file and executing tests whenever any file changes</span></div><div class="line">    autoWatch: <span class="literal">false</span>,</div><div class="line">    <span class="comment">// 选择运行的平台，这里只以PhantomJS做基础配置</span></div><div class="line">    <span class="comment">// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher</span></div><div class="line">    browsers: [<span class="string">'PhantomJS'</span>],</div><div class="line">    <span class="comment">//引用的插件, 如果默写，karma会默认加载 karma-* 的npm包</span></div><div class="line">    plugins: [<span class="string">'karma-mocha'</span>, <span class="string">'karma-phantomjs-launcher'</span>],</div><div class="line">    <span class="comment">// Continuous Integration mode</span></div><div class="line">    <span class="comment">// if true, Karma captures browsers, runs the tests and exits</span></div><div class="line">    singleRun: <span class="literal">true</span>,</div><div class="line">    <span class="comment">// Concurrency level</span></div><div class="line">    <span class="comment">// how many browser should be started simultaneous</span></div><div class="line">    concurrency: <span class="literal">Infinity</span></div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="测试用例怎么写"><a href="#测试用例怎么写" class="headerlink" title="测试用例怎么写"></a>测试用例怎么写</h1><h2 id="基本测试用例"><a href="#基本测试用例" class="headerlink" title="基本测试用例"></a>基本测试用例</h2><p>先来一个最简单的测试用例。<br>在src/添加一个index.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports = &#123;</div><div class="line">  <span class="attr">getUrlHash</span>: <span class="function">(<span class="params">url</span>) =&gt;</span> &#123;</div><div class="line">    url = url || <span class="built_in">window</span>.location.href;</div><div class="line">    <span class="keyword">let</span> arr = url.split(<span class="string">'#'</span>);</div><div class="line">    <span class="keyword">return</span> arr[<span class="number">1</span>] ? arr[<span class="number">1</span>]: <span class="string">''</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在spec/添加一个简单的测试用例：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> Url <span class="keyword">from</span> <span class="string">'../../../src/url.js'</span>;</div><div class="line"><span class="keyword">const</span> assert = <span class="built_in">require</span>(<span class="string">'assert'</span>);</div><div class="line"></div><div class="line">describe(<span class="string">'test getUrlHash'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">  it(<span class="string">'url 没有hash'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    assert.equal(Url.getUrlHash(<span class="string">'https://www.you.com'</span>), <span class="string">''</span>)</div><div class="line">  &#125;)</div><div class="line">  it(<span class="string">'url有hash没有参数'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    assert.equal(Url.getUrlHash(<span class="string">'https://www.you.com#hash'</span>), <span class="string">'hash'</span>)</div><div class="line">  &#125;)</div><div class="line">  it(<span class="string">'url有hash且有参数'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    assert.equal(Url.getUrlHash(<span class="string">'https://www.you.com?param=2222#hash'</span>), <span class="string">'hash'</span>)</div><div class="line">  &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p>然后我们在package.json中配置下test命令：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">"scripts": &#123;</div><div class="line">  "test": "karma start"</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行下<code>npm run test</code>， 发现有报错。<br>因为我们的开发源码和测试用例都用了es6的语法，所以需要用Webpack处理一下。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">npm install -D webpack karma-webpack</div><div class="line">npm install -D babel-loader @babel/core @babel/preset-env</div></pre></td></tr></table></figure></p>
+<p>karma.conf.js中增加webpack的配置：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">preprocessors: &#123;</div><div class="line">   <span class="string">'./test/unit/index.js'</span>: [<span class="string">'webpack'</span>]</div><div class="line">&#125;,</div><div class="line">...</div><div class="line"></div><div class="line">plugins: [<span class="string">'karma-webpack'</span>, <span class="string">'karma-mocha'</span>, <span class="string">'karma-phantomjs-launcher'</span>],</div><div class="line"></div><div class="line">...</div><div class="line"></div><div class="line">webpack: &#123;</div><div class="line">  <span class="attr">module</span>: &#123;</div><div class="line">    <span class="attr">rules</span>:[</div><div class="line">      &#123;</div><div class="line">        <span class="attr">test</span>: <span class="regexp">/\.jsx?$/</span>,</div><div class="line">        <span class="attr">use</span>: &#123;</div><div class="line">          <span class="attr">loader</span>: <span class="string">'babel-loader'</span>,</div><div class="line">          <span class="attr">query</span>: &#123;</div><div class="line">            <span class="attr">presets</span>: [<span class="string">'@babel/preset-env'</span>]</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;</div><div class="line">&#125;,</div><div class="line"><span class="attr">webpackMiddleware</span>: &#123;</div><div class="line">  <span class="attr">noInfo</span>: <span class="literal">true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>再运行一下，我们就能看到以下界面啦<br><img src="/blogImg/test.png" alt="测试用例示意图" width="600px;"></p>
+<hr>
+<h1 id="测试覆盖率和报告"><a href="#测试覆盖率和报告" class="headerlink" title="测试覆盖率和报告"></a>测试覆盖率和报告</h1><p>在知道了测试结果是否成功之后，我们得有个清晰的认知啊。比如，是否每种情况我们都覆盖到了？这时候，我们就要引入覆盖率工具了。<br>什么叫代码覆盖率呢？</p>
+<blockquote>
+<p>代码覆盖率描述的是代码被测试的比例和程度。简单地说，光是编写用例来测试代码，而不检查究竟哪些代码被测试过，哪些还没有测试过。</p>
+</blockquote>
+<p>代码覆盖率有四个指标：</p>
+<ul>
+<li>行覆盖率（line coverage）：每一行执行情况</li>
+<li>函数覆盖率（function coverage）：每个函数调用情况</li>
+<li>分支覆盖率（branch coverage）：条件代码块执行情况</li>
+<li>语句覆盖率（statement coverage）：语句执行情况</li>
+</ul>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>引入覆盖率工具包<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -D istanbul-instrumenter-loader karma-coverage-istanbul-reporter</div></pre></td></tr></table></figure></p>
+<p>如果想用别的报告配置，可以下载对应的插件(mocha-reporter之类)<br>做相关配置，最终版karma.conf.js如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</div><div class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span> (<span class="params">config</span>) </span>&#123;</div><div class="line">  config.set(&#123;</div><div class="line">    <span class="comment">//测试框架</span></div><div class="line">    frameworks: [<span class="string">'mocha'</span>],</div><div class="line">    <span class="comment">// 测试用例入口文件，入口文件中引入所有测试用例</span></div><div class="line">    files: [</div><div class="line">      <span class="string">'./test/unit/index.js'</span></div><div class="line">    ],</div><div class="line">    <span class="comment">// 为选定脚本指定前处理器</span></div><div class="line">    <span class="comment">// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor</span></div><div class="line">    preprocessors: &#123;</div><div class="line">      <span class="string">'./test/unit/index.js'</span>: [<span class="string">'webpack'</span>]</div><div class="line">    &#125;,</div><div class="line">    <span class="comment">// 报告配置</span></div><div class="line">    <span class="comment">// possible values: 'dots', 'progress'</span></div><div class="line">    <span class="comment">// available reporters: https://npmjs.org/browse/keyword/karma-reporter</span></div><div class="line">    reporters: [<span class="string">'progress'</span>, <span class="string">'coverage-istanbul'</span>],</div><div class="line"></div><div class="line">    <span class="comment">// 配置代码覆盖率插件</span></div><div class="line">    coverageIstanbulReporter: &#123;</div><div class="line">      <span class="comment">// 以什么格式, 这里设置了输出 html文件 ,info文件 ,及控制台</span></div><div class="line">      reports: [<span class="string">'html'</span>, <span class="string">'lcovonly'</span>, <span class="string">'text-summary'</span>],</div><div class="line">      <span class="comment">// 将文件输出路径定位</span></div><div class="line">      dir: path.join(__dirname, <span class="string">'/test/coverage'</span>),</div><div class="line">      <span class="comment">// 修正 webpack 路径</span></div><div class="line">      fixWebpackSourcePaths: <span class="literal">true</span>,</div><div class="line">      <span class="comment">// 将生成的html放到./coverage/html/下</span></div><div class="line">      <span class="string">'report-config'</span>: &#123;</div><div class="line">        <span class="attr">html</span>: &#123;</div><div class="line">          <span class="attr">subdir</span>: <span class="string">'html'</span></div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;,</div><div class="line">    <span class="comment">// web server port</span></div><div class="line">    port: <span class="number">9876</span>,</div><div class="line">     <span class="comment">// enable / disable colors in the output (reporters and logs)</span></div><div class="line">    colors: <span class="literal">true</span>,</div><div class="line">    <span class="comment">// 日志级别</span></div><div class="line">    <span class="comment">// 取值: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG</span></div><div class="line">    logLevel: config.LOG_INFO,</div><div class="line">    <span class="comment">// 启用/禁用监视文件变化重新执行测试的功能</span></div><div class="line">    <span class="comment">// enable / disable watching file and executing tests whenever any file changes</span></div><div class="line">    autoWatch: <span class="literal">false</span>,</div><div class="line">     <span class="comment">// 选择运行的平台，这里只以PhantomJS做基础配置</span></div><div class="line">    <span class="comment">// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher</span></div><div class="line">    browsers: [<span class="string">'PhantomJS'</span>],</div><div class="line">    <span class="comment">// Continuous Integration mode</span></div><div class="line">    <span class="comment">// if true, Karma captures browsers, runs the tests and exits</span></div><div class="line">    singleRun: <span class="literal">true</span>,</div><div class="line">    <span class="comment">// Concurrency level</span></div><div class="line">    <span class="comment">// how many browser should be started simultaneous</span></div><div class="line">    concurrency: <span class="literal">Infinity</span>,</div><div class="line">    <span class="comment">//引用的插件, 如果默写，karma会默认加载 karma-* 的npm包</span></div><div class="line">    plugins: [<span class="string">'karma-webpack'</span>, <span class="string">'karma-mocha'</span>, <span class="string">'karma-phantomjs-launcher'</span>, <span class="string">'karma-coverage-istanbul-reporter'</span>],</div><div class="line">    <span class="attr">webpack</span>: &#123;</div><div class="line">      <span class="attr">module</span>: &#123;</div><div class="line">        <span class="attr">rules</span>: [&#123;</div><div class="line">          <span class="attr">test</span>: <span class="regexp">/\.jsx?$/</span>,</div><div class="line">          <span class="attr">use</span>: &#123;</div><div class="line">            <span class="attr">loader</span>: <span class="string">'babel-loader'</span>,</div><div class="line">            <span class="attr">query</span>: &#123;</div><div class="line">              <span class="attr">presets</span>: [<span class="string">'@babel/preset-env'</span>]</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">        &#125;,</div><div class="line">        <span class="comment">// 覆盖率只针对源代码</span></div><div class="line">        &#123;</div><div class="line">          <span class="attr">test</span>: <span class="regexp">/\.jsx?$/</span>,</div><div class="line">          <span class="attr">use</span>: &#123; <span class="attr">loader</span>: <span class="string">'istanbul-instrumenter-loader'</span> &#125;,</div><div class="line">          <span class="attr">include</span>: path.resolve(<span class="string">'src/'</span>)</div><div class="line">        &#125;]</div><div class="line">      &#125;,</div><div class="line">      <span class="attr">devtool</span>: <span class="string">'inline-source-map'</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">webpackMiddleware</span>: &#123;</div><div class="line">      <span class="attr">noInfo</span>: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>此时运行测试，就会在test目录下生成coverage文件下，里面有相关测试报告，命令行也会有测试覆盖率的简单输出。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">=============================== Coverage summary ===============================</div><div class="line">Statements   : <span class="number">100</span>% ( <span class="number">4</span>/<span class="number">4</span> )</div><div class="line">Branches     : <span class="number">75</span>% ( <span class="number">3</span>/<span class="number">4</span> )</div><div class="line">Functions    : <span class="number">100</span>% ( <span class="number">1</span>/<span class="number">1</span> )</div><div class="line">Lines        : <span class="number">100</span>% ( <span class="number">4</span>/<span class="number">4</span> )</div><div class="line">================================================================================</div></pre></td></tr></table></figure></p>
+<p>有什么条件没有运行到呢，打开coverage下的html<br><img src="/blogImg/test_coverage.png" alt="测试用例示意图" width="600px;"><br>标黄的window.location.href就是没有测试到的条件。</p>
+<h2 id="怎么进行的覆盖率统计"><a href="#怎么进行的覆盖率统计" class="headerlink" title="怎么进行的覆盖率统计"></a>怎么进行的覆盖率统计</h2><h3 id="生成的lcov-info"><a href="#生成的lcov-info" class="headerlink" title="生成的lcov.info"></a>生成的lcov.info</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">TN:</div><div class="line">SF:/Users/xxx/Documents/practice/testing/src/index.js </div><div class="line">FN:2,(anonymous_0)</div><div class="line">FNF:1</div><div class="line">FNH:1</div><div class="line">FNDA:4,(anonymous_0)</div><div class="line">DA:1,1</div><div class="line">DA:3,4</div><div class="line">DA:4,4</div><div class="line">DA:5,4</div><div class="line">LF:4</div><div class="line">LH:4</div><div class="line">BRDA:3,0,0,4</div><div class="line">BRDA:3,0,1,1</div><div class="line">BRDA:5,1,0,2</div><div class="line">BRDA:5,1,1,2</div><div class="line">BRF:4</div><div class="line">BRH:4</div><div class="line">end_of_record</div></pre></td></tr></table></figure>
+<p>SF代表文件<br>FN代表函数，2代表函数开始的行数<br>FNF:1 表示一共有1个函数<br>FNH:1 表示有一个函数被测试用例覆盖<br>FNDA:4 表示函数被执行了4次</p>
+<p>html文件里面是个网页报告</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>大概原理就是，对源代码进行语法分析，插入覆盖率统计的代码，将执行统计结果放到对应的全局变量中，再将语法树转成js代码运行。在测试用例跑完之后再重新读取这些全局变量。</p>
+<p>参考：<br><a href="https://segmentfault.com/a/1190000010838845" target="_blank" rel="external">代码测试覆盖率分析</a><br><a href="https://github.com/tmallfe/tmallfe.github.io/issues/37" target="_blank" rel="external">聊一聊前端自动化测试</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+            <a href="/tags/自动化测试/" rel="tag"># 自动化测试</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/01/对于Flexible和移动端适配的一些理解/" rel="next" title="对于Flexible和移动端适配的一些理解">
+                <i class="fa fa-chevron-left"></i> 对于Flexible和移动端适配的一些理解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars1.githubusercontent.com/u/12394884?v=3&s=400"
+               alt="Lareina" />
+          <p class="site-author-name" itemprop="name">Lareina</p>
+          <p class="site-description motion-element" itemprop="description">吃吃吃&&睡睡睡</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/guxinyan" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:850836576@qq.com" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-link"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://zhanjingbo.site/" title="Zhan's Blog" target="_blank">Zhan's Blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是单元测试"><span class="nav-number">1.</span> <span class="nav-text">什么是单元测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试方案"><span class="nav-number">2.</span> <span class="nav-text">测试方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单测试工具介绍"><span class="nav-number">2.1.</span> <span class="nav-text">简单测试工具介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目录结构"><span class="nav-number">2.2.</span> <span class="nav-text">目录结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#karma配置"><span class="nav-number">2.3.</span> <span class="nav-text">karma配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置项"><span class="nav-number">2.3.1.</span> <span class="nav-text">配置项</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试用例怎么写"><span class="nav-number">3.</span> <span class="nav-text">测试用例怎么写</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本测试用例"><span class="nav-number">3.1.</span> <span class="nav-text">基本测试用例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试覆盖率和报告"><span class="nav-number">4.</span> <span class="nav-text">测试覆盖率和报告</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#示例"><span class="nav-number">4.1.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么进行的覆盖率统计"><span class="nav-number">4.2.</span> <span class="nav-text">怎么进行的覆盖率统计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成的lcov-info"><span class="nav-number">4.2.1.</span> <span class="nav-text">生成的lcov.info</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">4.2.2.</span> <span class="nav-text">原理</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lareina</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
